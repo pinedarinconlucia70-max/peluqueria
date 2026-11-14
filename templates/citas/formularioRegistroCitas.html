@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleFormularios.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <title>Registrar cita</title>
+</head>
+<body>
+<div class="card">
+    <form class="form-grid" action="{{ url_for('citas_guardar') }}" method="post">
+        <h2 style="grid-column: span 2;">REGISTRAR UNA CITA</h2>
+        <label for="idServicioFK">Servicio</label>
+        <select id="idServicioFK" name="idServicioFK" data-service-price="totalServicio" required>
+            <option value="" disabled selected>Selecciona un servicio</option>
+            {% for servicio in servicios %}<option value="{{ servicio.idServicio }}" data-price="{{ servicio.precioBase }}">{{ servicio.nombreServicio }}</option>{% endfor %}
+        </select>
+        <label for="fecha">Fecha</label><input type="date" id="fecha" name="fecha" required>
+        {% if tiene_horario %}
+        <label for="horaInicio">Hora de inicio</label><input type="time" id="horaInicio" name="horaInicio" required>
+        <label for="horaFinal">Hora de finalización</label><input type="time" id="horaFinal" name="horaFinal">
+        {% endif %}
+        <label for="totalServicio">Total ($)</label><input type="number" id="totalServicio" name="totalServicio" min="0" step="0.01" required>
+        <label for="idUsuarioFK">Cliente</label>
+        <select id="idUsuarioFK" name="idUsuarioFK" required>
+            <option value="" disabled selected>Selecciona un cliente</option>
+            {% for usuario in usuarios %}<option value="{{ usuario.idUsuario }}">{{ usuario.nombreCompleto }}</option>{% endfor %}
+        </select>
+        <label for="idInsumoFK">Insumo asociado</label>
+        <select id="idInsumoFK" name="idInsumoFK" required>
+            <option value="" disabled selected>Selecciona un insumo</option>
+            {% for insumo in insumos %}<option value="{{ insumo.idInsumo }}">{{ insumo.nombreInsumo }}</option>{% endfor %}
+        </select>
+        <label for="observacion">Observaciones</label><input id="observacion" name="observacion" maxlength="50">
+        <input type="hidden" name="estado" value="Pendiente">
+        <a class="btn-cancelar" href="{{ url_for('listar_citas') }}">Cancelar</a>
+        <button type="submit" class="btn-login">Registrar</button>
+    </form>
+</div>
+</body>
+</html>

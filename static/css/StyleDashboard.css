@@ -1,0 +1,111 @@
+:root {
+    --dorado: #D4AF37;
+    --negro: #0a0a0a;
+    --blanco: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: url('https://i.pinimg.com/1200x/9f/44/21/9f4421c5108c0375bfd53a3f76fcf187.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* NAVBAR */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: var(--negro);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 1000;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    color: var(--dorado);
+    font-size: 1.8rem;
+}
+
+/* BOTONES MENU */
+.menu {
+    display: flex;
+    gap: 20px;
+}
+
+.menu button {
+    background: transparent;
+    border: 2px solid transparent;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s;
+    font-weight: 500;
+}
+
+.menu button:hover {
+    border: 2px solid var(--dorado);
+    color: var(--dorado);
+    background: var(--blanco);
+}
+
+/* BOTON ACTIVO */
+.menu button.active {
+    background: var(--dorado);
+    color: black;
+}
+
+/* CONTENEDOR */
+.container {
+    margin-top: 80px;
+    padding: 30px;
+}
+
+/* CARD CONTENEDORA DEL IFRAME */
+.iframe-card {
+    width: 100%;
+    height: 82vh;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* IFRAME */
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+@media(max-width: 768px) {
+    .menu {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .navbar {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+    }
+    .container {
+        margin-top: 140px;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: var(--dorado);
+}
