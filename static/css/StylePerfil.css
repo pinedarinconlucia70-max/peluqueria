@@ -24,6 +24,7 @@ body{
     grid-template-columns:2fr 1fr;
     gap:30px;
     overflow: hidden;
+    height: 90vh;
 }
 
 /* TARJETA PERFIL */
@@ -33,14 +34,6 @@ body{
     border-radius:40px;
     box-shadow:0 10px 30px rgba(0,0,0,0.08);
     overflow:hidden;
-}
-
-/* FOTO */
-
-.profile-img{
-    width:50%;
-    height:250px;
-    object-fit:cover;
 }
 
 /* CONTENIDO */
@@ -78,6 +71,24 @@ body{
 
 .value{
     font-weight:600;
+}
+
+.btn {
+    width: 50%;
+    text-align: center;
+    background-color: var(--dorado);
+    color: black;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 50px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 1s ease;
+}
+
+.btn:hover {
+    background-color: #f7c745;
+    color: white;
 }
 
 /* ====================== */
@@ -130,23 +141,4 @@ body{
     .layout{
         grid-template-columns:1fr;
     }
-}
-
-.btn {
-    width: 50%;
-    text-align: center;
-    background-color: var(--dorado);
-    color: black;
-    font-weight: 600;
-    padding: 10px 15px;
-    border-radius: 50px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 1s ease;
-}
-
-.btn:hover {
-    transform: scale(1.2);
-    background-color: #f7c745;
-    color: white;
 }

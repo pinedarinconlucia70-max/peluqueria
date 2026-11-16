@@ -20,7 +20,10 @@ a {
     display: flex;
     gap: 24px;
     justify-content: space-between;
-    padding: 18px max(5vw, 20px);
+    padding: 30px max(5vw, 20px);
+}
+.site-header a {
+    text-decoration: none;
 }
 
 .site-header nav {
@@ -29,13 +32,30 @@ a {
     gap: 20px;
 }
 
-.site-header a {
-    text-decoration: none;
+.site-header nav a {
+    font-size: 18px;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    border-radius: 50px;
+    padding: 10px 20px;
+    transition: ease 0.3s;
+}
+
+
+.site-header nav a:hover {
+    color: #ffffff;
+    border: 1px #ffffff dashed;
 }
 
 .brand {
     color: #d4af37;
     font-weight: 600;
+    font-size: 20px;
+    transition: ease 0.3s;
+}
+
+.site-header .brand:hover {
+    text-decoration: underline;
 }
 
 .page {
@@ -49,10 +69,24 @@ a {
 }
 
 .back-link {
+    font-size: 20px;
     color: #6a5a26;
     display: inline-block;
     margin-bottom: 20px;
     text-decoration: none;
+    border-bottom-left-radius: 5px;
+    border-left: 1px solid #6a5a26;
+    border-bottom: 1px solid #6a5a26;
+    padding: 5px 10px;
+    transition: ease 0.5s;
+}
+
+.back-link:hover {
+    transform: translateX(10px);
+    box-shadow: -3px 3px 4px #6a5a26;
+    border-radius: 5px;
+    border-right: 1px solid #6a5a26;
+    border-top: 1px solid #6a5a26;
 }
 
 .welcome {
@@ -83,19 +117,23 @@ a {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
-.service-card,
-.category-card,
-.booking-card {
-    background: #fff;
-    border: 1px solid #e8e2d3;
+.service-card {
+    background: #ececec;
+    border: 1px solid #b49128; 
     border-radius: 12px;
     box-shadow: 0 8px 26px rgb(34 29 18 / 6%);
     padding: 22px;
+    transition: ease 0.3s;
 }
 
 .service-card {
     display: flex;
     flex-direction: column;
+}
+
+.service-card:hover {
+    box-shadow: 0 0 20px #b49128;
+
 }
 
 .service-card-top {
@@ -108,7 +146,7 @@ a {
     background: #f3edda;
     border-radius: 20px;
     color: #6a5720;
-    font-size: .78rem;
+    font-size: 1.2rem;
     padding: 5px 10px;
 }
 

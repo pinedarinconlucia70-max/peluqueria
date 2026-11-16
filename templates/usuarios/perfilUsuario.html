@@ -13,13 +13,15 @@
     <div class="profile-card">
         <div class="profile-content">
             <h1 class="profile-name">{{ usuario.nombreCompleto }}</h1>
-            <div class="info"><div class="label">Tipo de documento</div><div class="value">{{ usuario.tipoDocumento }}</div></div>
-            <div class="info"><div class="label">Número de documento</div><div class="value">{{ usuario.numDocumento }}</div></div>
-            <div class="info"><div class="label">Teléfono</div><div class="value">{{ usuario.telefono }}</div></div>
-            <div class="info"><div class="label">Email</div><div class="value">{{ usuario.email }}</div></div>
-            <div class="info"><div class="label">Género</div><div class="value">{{ usuario.genero }}</div></div>
-            <div class="info"><div class="label">Cargo</div><div class="value">{{ usuario.cargo or 'Sin cargo' }}</div></div>
-            <a href="{{ url_for('editar_perfil') }}" class="btn">Editar perfil</a>
+                <div class="profile-grid">
+                    <div class="info"><div class="label">Tipo de documento</div><div class="value">{{ usuario.tipoDocumento }}</div></div>
+                    <div class="info"><div class="label">Número de documento</div><div class="value">{{ usuario.numDocumento }}</div></div>
+                    <div class="info"><div class="label">Teléfono</div><div class="value">{{ usuario.telefono }}</div></div>
+                    <div class="info"><div class="label">Email</div><div class="value">{{ usuario.email }}</div></div>
+                    <div class="info"><div class="label">Género</div><div class="value">{{ usuario.genero }}</div></div>
+                    <div class="info"><div class="label">Cargo</div><div class="value">{{ usuario.cargo or 'Sin cargo' }}</div></div>
+                    <a href="{{ url_for('editar_perfil') }}" class="btn">Editar perfil</a>
+                </div>
         </div>
     </div>
     <div class="activity-card">

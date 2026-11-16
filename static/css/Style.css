@@ -19,7 +19,7 @@
 }
 
 body{
-    background:var(--negro-suave);
+    background:var(--negro-puro);
     color:var(--negro-puro);
     overflow-x:hidden;
 }
