@@ -26,7 +26,6 @@ app.config["CLIENT_ROLE_ID"] = int(os.environ.get("CLIENT_ROLE_ID", "3"))
 _SCHEMA_CACHE = {}
 _ROLE_TABLE_NAME = None
 _INSUMO_CATEGORIES = {
-<<<<<<< HEAD
     "1": {
         "title": "Tintes y Coloración",
         "categories": {"Color", "tinte permanente"},
@@ -47,15 +46,6 @@ _INSUMO_CATEGORIES = {
         "title": "Depilación",
         "categories": {"depilacion"},
     },
-=======
-    "1": "Tintes y Coloración",
-    "2": "Químicos y Alisados",
-    "3": "Cuidado Capilar",
-    "4": "Uñas y Manicura",
-    "5": "Depilación y Estética",
-    "6": "Material Desechable",
-    "7": "Herramientas y Barbería",
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 }
 _ROLE_ADMIN = 1
 _ROLE_EMPLOYEE = 2
@@ -69,7 +59,6 @@ _SERVICE_CATALOGS = {
         "title": "Servicios para Caballeros",
         "categories": {"caballeros", "ellos"},
     },
-<<<<<<< HEAD
     "manos-y-pies": {
         "title": "Manos y Pies",
         "categories": {
@@ -77,54 +66,28 @@ _SERVICE_CATALOGS = {
             "Press On",
             "acrilico",
             "Combos",
-=======
-    "color": {
-        "title": "Color",
-        "categories": {"color"},
-    },
-    "manos-y-pies": {
-        "title": "Manos y Pies",
-        "categories": {
-            "acrilico",
-            "combos",
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
             "decoracion",
             "manicura",
             "manos y pies",
             "mantenimiento",
             "pedicure",
-<<<<<<< HEAD
-=======
-            "press on",
-            "retiros",
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
             "semipermanente",
             "unas",
             "spa",
         },
     },
-<<<<<<< HEAD
      "cejas-y-pestanas": {
             "title": "Cejas y Pestañas",
             "categories": {"cejas y pestanas"},
         },
-=======
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
     "depilacion": {
         "title": "Depilación",
         "categories": {"depilacion"},
     },
-<<<<<<< HEAD
      "color": {
             "title": "Color",
             "categories": {"color"},
         },
-=======
-    "cejas-y-pestanas": {
-        "title": "Cejas y Pestañas",
-        "categories": {"cejas y pestanas"},
-    },
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 }
 
 
@@ -201,8 +164,6 @@ def _normalize_label(value):
     normalized = unicodedata.normalize("NFKD", str(value or ""))
     return "".join(character for character in normalized if not unicodedata.combining(character)).casefold().strip()
 
-
-<<<<<<< HEAD
 def _insumo_category_id(value):
     if value is None:
         return ""
@@ -248,8 +209,7 @@ def _inventory_summary():
     return summary, alerts
 
 
-=======
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
+
 def _available_services():
     duration_expression = (
         "duracion" if "duracion" in _table_columns("servicio") else "NULL"
@@ -768,7 +728,6 @@ def perfil_usuario():
     usuario = _current_user()
     if usuario is None:
         return redirect(url_for("login"))
-<<<<<<< HEAD
     resumen_insumos, alertas_stock = _inventory_summary()
     return render_template(
         "usuarios/perfilUsuario.html",
@@ -776,9 +735,6 @@ def perfil_usuario():
         resumen_insumos=resumen_insumos,
         alertas_stock=alertas_stock,
     )
-=======
-    return render_template("usuarios/perfilUsuario.html", usuario=usuario)
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 
 
 @app.route("/usuarios/perfil/editar", methods=["GET", "POST"])
@@ -1006,7 +962,6 @@ def citas_cambiar_estado(id, estado):
 
 @app.route("/insumos")
 def listar_insumos():
-<<<<<<< HEAD
     insumos = _fetch_all("SELECT * FROM insumo ORDER BY idInsumo ASC")
     for insumo in insumos:
         category_value = insumo.get("categoriaInsumo")
@@ -1022,11 +977,6 @@ def listar_insumos():
     return render_template(
         "insumos/tablaInsumos.html",
         insumos=insumos,
-=======
-    return render_template(
-        "insumos/tablaInsumos.html",
-        insumos=_fetch_all("SELECT * FROM insumo ORDER BY idInsumo DESC"),
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
         categorias=_INSUMO_CATEGORIES,
     )
 
@@ -1073,7 +1023,6 @@ def insumos_formulario_actualizacion(id):
     insumo = _fetch_one("SELECT * FROM insumo WHERE idInsumo = %s", (id,))
     if insumo is None:
         abort(404)
-<<<<<<< HEAD
         
     category_value = insumo.get("categoriaInsumo")
     insumo["categoriaId"] = _insumo_category_id(category_value)
@@ -1082,16 +1031,11 @@ def insumos_formulario_actualizacion(id):
         "insumos/formularioActualizacionInsumos.html", 
         insumo=insumo,
         categorias=_INSUMO_CATEGORIES  # <-- ¡Agrega esta línea aquí!
-=======
-    return render_template(
-        "insumos/formularioActualizacionInsumos.html", insumo=insumo
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
     )
 
 
 @app.route("/servicios")
 def listar_servicios():
-<<<<<<< HEAD
     servicios = _fetch_all("SELECT * FROM servicio ORDER BY idServicio DESC")
     for servicio in servicios:
         servicio["categoriaId"] = _service_category_id(servicio.get("categoria"))
@@ -1101,12 +1045,6 @@ def listar_servicios():
         servicios=servicios,
         tiene_duracion="duracion" in _table_columns("servicio"),
         categorias=_SERVICE_CATALOGS,
-=======
-    return render_template(
-        "servicios/tablaServicios.html",
-        servicios=_fetch_all("SELECT * FROM servicio ORDER BY idServicio DESC"),
-        tiene_duracion="duracion" in _table_columns("servicio"),
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
     )
 
 
@@ -1180,7 +1118,6 @@ def usuarioperfil(id):
     usuario = _fetch_one(_user_query("WHERE u.idUsuario = %s"), (id,))
     if usuario is None:
         abort(404)
-<<<<<<< HEAD
     resumen_insumos, alertas_stock = _inventory_summary()
     return render_template(
         "usuarios/perfilUsuario.html",
@@ -1188,9 +1125,6 @@ def usuarioperfil(id):
         resumen_insumos=resumen_insumos,
         alertas_stock=alertas_stock,
     )
-=======
-    return render_template("usuarios/perfilUsuario.html", usuario=usuario)
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 
 
 @app.errorhandler(400)

@@ -107,7 +107,6 @@ table{
     box-shadow:0 10px 25px rgba(0, 0, 0, 0.51);
 }
 
-<<<<<<< HEAD
 .insumos-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 16rem;
@@ -154,8 +153,6 @@ table{
     gap: 1rem;
 }
 
-=======
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 th{
     background:var(--dorado);
     color:black;
@@ -283,7 +280,6 @@ tr:hover {
     font-weight: 500;
 }
 
-<<<<<<< HEAD
 /* PAGINACIÓN */
 .paginacion{
     display: flex;
@@ -391,21 +387,15 @@ tr:hover {
 
 
 
-=======
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 @media print {
 
     .contenedor-buscador {
         display: none !important;
     }
 
-<<<<<<< HEAD
     .btn-registrar, .btn-pdf, .header,
     .insumos-controles, .servicios-controles,
     th:last-child, td:last-child {
-=======
-    .btn-registrar, .btn-pdf, .header, th:last-child, td:last-child {
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
         display: none !important;
     }
 
