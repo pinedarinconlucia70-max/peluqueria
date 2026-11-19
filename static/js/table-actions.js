@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+<<<<<<< HEAD
     const pageSize = 8;
 
+=======
+>>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
     document.querySelectorAll("[data-print]").forEach((button) => {
         button.addEventListener("click", () => window.print());
     });
@@ -10,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!tableBody) {
             return;
         }
+<<<<<<< HEAD
 
         const rows = Array.from(tableBody.querySelectorAll("tr:not([data-table-empty])"));
         const emptyRow = tableBody.querySelector("[data-table-empty]");
@@ -83,6 +87,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         renderTable();
+=======
+        input.addEventListener("input", () => {
+            const query = input.value.trim().toLocaleLowerCase();
+            tableBody.querySelectorAll("tr").forEach((row) => {
+                row.hidden = !row.textContent.toLocaleLowerCase().includes(query);
+            });
+        });
+>>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
     });
 
     document.querySelectorAll("form[data-confirm]").forEach((form) => {

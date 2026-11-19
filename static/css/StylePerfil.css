@@ -23,8 +23,13 @@ body{
     display:grid;
     grid-template-columns:2fr 1fr;
     gap:30px;
+<<<<<<< HEAD
     align-items:start;
     min-height:90vh;
+=======
+    overflow: hidden;
+    height: 90vh;
+>>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 }
 
 /* TARJETA PERFIL */
@@ -100,7 +105,10 @@ body{
     border-radius:40px;
     box-shadow:0 10px 30px rgba(0,0,0,0.08);
     padding:30px;
+<<<<<<< HEAD
     min-width:0;
+=======
+>>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 }
 
 .activity-title{
@@ -136,6 +144,7 @@ body{
     color:black;
 }
 
+<<<<<<< HEAD
 /* RESUMEN DE INSUMOS */
 
 .inventory-summary,
@@ -242,11 +251,14 @@ body{
     font-size:0.8rem;
 }
 
+=======
+>>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 /* RESPONSIVE */
 
 @media(max-width:900px){
     .layout{
         grid-template-columns:1fr;
+<<<<<<< HEAD
         height:auto;
         min-height:90vh;
         overflow:visible;
@@ -254,5 +266,7 @@ body{
 
     .activity-card{
         max-height:none;
+=======
+>>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
     }
 }
