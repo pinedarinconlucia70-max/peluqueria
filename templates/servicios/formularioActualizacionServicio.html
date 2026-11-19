@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleFormularios.css') }}">
+    <title>Actualizar servicio</title>
+</head>
+<body>
+<div class="card">
+    <form class="form-grid" action="{{ url_for('servicios_guardar') }}" method="post">
+        <h2 style="grid-column: span 2;">ACTUALIZACIÓN DE SERVICIOS</h2>
+        <input type="hidden" name="idServicio" value="{{ servicio.idServicio }}">
+        <input type="hidden" name="estado" value="{{ servicio.estado }}">
+        <label for="nombreServicio">Nombre del servicio</label><input id="nombreServicio" name="nombreServicio" value="{{ servicio.nombreServicio }}" required>
+        <label for="descripcionServicio">Descripción</label><input id="descripcionServicio" name="descripcionServicio" value="{{ servicio.descripcionServicio }}" required>
+        <label for="precioBase">Precio base</label><input type="number" id="precioBase" name="precioBase" min="0" step="0.01" value="{{ servicio.precioBase }}" required>
+        {% if tiene_duracion %}
+        <label for="duracion">Duración</label><input type="time" id="duracion" name="duracion" value="{{ servicio.duracion|time_input }}" required>
+        {% endif %}
+        <label for="categoria">Categoría</label>
+        <select id="categoria" name="categoria" required>
+            {% for categoria in categorias %}<option value="{{ categoria }}" {{ 'selected' if servicio.categoria == categoria else '' }}>{{ categoria }}</option>{% endfor %}
+        </select>
+        <label for="idUsuarioFK">Responsable</label>
+        <select id="idUsuarioFK" name="idUsuarioFK" required>
+            {% for usuario in usuarios %}<option value="{{ usuario.idUsuario }}" {{ 'selected' if servicio.idUsuarioFK == usuario.idUsuario else '' }}>{{ usuario.nombreCompleto }}</option>{% endfor %}
+        </select>
+        <label for="idInsumoFK">Insumo asociado</label>
+        <select id="idInsumoFK" name="idInsumoFK" required>
+            {% for insumo in insumos %}<option value="{{ insumo.idInsumo }}" {{ 'selected' if servicio.idInsumoFK == insumo.idInsumo else '' }}>{{ insumo.nombreInsumo }}</option>{% endfor %}
+        </select>
+        <a class="btn-cancelar" href="{{ url_for('listar_servicios') }}">Cancelar</a>
+        <button type="submit" class="btn-login">Actualizar</button>
+    </form>
+</div>
+</body>
+</html>

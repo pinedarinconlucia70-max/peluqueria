@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogo.css') }}">
+    <script src="{{ url_for('static', filename='js/booking.js') }}" defer></script>
+    <title>Fecha de la cita | D'JUAN CARLOS PELUQUERIA</title>
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}">D'JUAN CARLOS PELUQUERIA</a>
+    <nav><a href="{{ url_for('portal_cliente') }}">Mi cuenta</a><a href="{{ url_for('logout') }}">Cerrar sesión</a></nav>
+</header>
+<main class="page narrow">
+    <a class="back-link" href="{{ url_for('catalogo_servicios', slug=catalog_slug) }}">← Volver al catálogo</a>
+    <section class="welcome">
+        <p class="eyebrow">PASO 1 DE 2</p>
+        <h1>Elige fecha y hora</h1>
+        <p>Servicio seleccionado: <strong>{{ servicio.nombreServicio }}</strong></p>
+    </section>
+    <form class="booking-card" method="post" data-booking-form>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" name="fecha" type="date" min="{{ fecha_minima }}" required>
+        <label for="hora">Hora solicitada</label>
+        <input id="hora" name="hora" type="time" min="08:00" max="20:00" step="1800" required>
+        {% if not tiene_horario %}
+        <p class="help-text">La base de datos actual no tiene una columna de hora; la hora solicitada se incluirá en la observación de la cita.</p>
+        {% endif %}
+        <button class="button" type="submit">Continuar</button>
+    </form>
+</main>
+</body>
+</html>

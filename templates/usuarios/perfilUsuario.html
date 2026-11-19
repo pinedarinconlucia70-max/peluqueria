@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StylePerfil.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <title>Perfil Usuario | D'JUAN CARLOS PELUQUERIA</title>
+</head>
+<body>
+<div class="layout">
+    <div class="profile-card">
+        <div class="profile-content">
+            <h1 class="profile-name">{{ usuario.nombreCompleto }}</h1>
+                <div class="profile-grid">
+                    <div class="info"><div class="label">Tipo de documento</div><div class="value">{{ usuario.tipoDocumento }}</div></div>
+                    <div class="info"><div class="label">Número de documento</div><div class="value">{{ usuario.numDocumento }}</div></div>
+                    <div class="info"><div class="label">Teléfono</div><div class="value">{{ usuario.telefono }}</div></div>
+                    <div class="info"><div class="label">Email</div><div class="value">{{ usuario.email }}</div></div>
+                    <div class="info"><div class="label">Género</div><div class="value">{{ usuario.genero }}</div></div>
+                    <div class="info"><div class="label">Cargo</div><div class="value">{{ usuario.cargo or 'Sin cargo' }}</div></div>
+                    <a href="{{ url_for('editar_perfil') }}" class="btn">Editar perfil</a>
+                </div>
+        </div>
+    </div>
+    <div class="activity-card">
+        <div class="activity-title">Actividad</div>
+        <div class="days">
+            <div class="day" id="lunes">Lunes</div><div class="day" id="martes">Martes</div>
+            <div class="day" id="miercoles">Miércoles</div><div class="day" id="jueves">Jueves</div>
+            <div class="day" id="viernes">Viernes</div><div class="day" id="sabado">Sábado</div>
+        </div>
+        <section class="inventory-summary" aria-labelledby="inventory-title">
+            <h2 id="inventory-title" class="inventory-title">Resumen de Insumos</h2>
+            <div class="inventory-metrics">
+                <div class="inventory-metric">
+                    <span>Total disponibles</span>
+                    <strong>{{ resumen_insumos.total_disponibles }}</strong>
+                </div>
+                <div class="inventory-metric critical">
+                    <span>Stock crítico</span>
+                    <strong>{{ resumen_insumos.stock_critico }}</strong>
+                </div>
+            </div>
+            <a class="inventory-link" href="{{ url_for('listar_insumos') }}">Ir a Insumos</a>
+        </section>
+    </div>
+</div>
+</body>
+</html>

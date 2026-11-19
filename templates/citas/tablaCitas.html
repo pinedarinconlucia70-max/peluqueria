@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleTablas.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="{{ url_for('static', filename='js/table-actions.js') }}" defer></script>
+    <title>Citas | D'JUAN CARLOS PELUQUERIA</title>
+</head>
+<body>
+<div class="header">
+    <h2>Lista de Citas</h2>
+    <div class="acciones-header">
+        <button class="btn-pdf" type="button" data-print><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button>
+        <a class="btn-registrar" href="{{ url_for('citas_formulario_registro') }}"><i class="fa-solid fa-plus"></i> Registrar</a>
+    </div>
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}<p class="alert {{ category }}">{{ message }}</p>{% endfor %}
+{% endwith %}
+{% if citas %}
+<table>
+    <thead><tr><th>#</th><th>Servicio</th><th>Fecha</th>{% if tiene_horario %}<th>Hora</th>{% endif %}<th>Observaciones</th><th>Cliente</th><th>Estado</th><th>Total</th><th>Acciones</th></tr></thead>
+    <tbody id="tablaCitas">
+    {% for cita in citas %}
+    <tr>
+        <td>{{ cita.idCita }}</td>
+        <td><strong>{{ cita.nombreServicio or cita.servicio }}</strong></td>
+        <td>{{ cita.fecha.isoformat() if cita.fecha else '' }}</td>
+        {% if tiene_horario %}<td>{{ cita.horaInicio|time_input }}{% if cita.horaFinal %} - {{ cita.horaFinal|time_input }}{% endif %}</td>{% endif %}
+        <td>{{ cita.observacion or '' }}</td>
+        <td>{{ cita.cliente or cita.idUsuarioFK }}</td>
+        <td><span class="{{ 'estado-activo' if cita.estado in ['Asistida', 'Realizada'] else 'estado-inactivo' }}">{{ cita.estado }}</span></td>
+        <td><strong>${{ cita.totalServicio }}</strong></td>
+        <td>
+            <a href="{{ url_for('citas_formulario_actualizacion', id=cita.idCita) }}" class="boton-editar boton-icono" title="Editar"><i class="fas fa-edit"></i></a>
+            {% set nuevo_estado = 'Cancelada' if cita.estado != 'Cancelada' else 'Pendiente' %}
+            <form method="post" class="inline-form" data-confirm="¿Confirmas cambiar el estado de esta cita?" action="{{ url_for('citas_cambiar_estado', id=cita.idCita, estado=nuevo_estado) }}">
+                <button class="boton-icono {{ 'boton-eliminar' if nuevo_estado == 'Cancelada' else 'boton-activar' }}" type="submit" title="{{ nuevo_estado }}"><i class="{{ 'fas fa-trash' if nuevo_estado == 'Cancelada' else 'fa-solid fa-user-check' }}"></i></button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="sin-resultados"><i class="fas fa-calendar-times"></i><p>No se encontraron citas registradas</p></div>
+{% endif %}
+</body>
+</html>
