@@ -12,6 +12,12 @@
 <div class="layout">
     <div class="profile-card">
         <div class="profile-content">
+            <section class="welcome">
+                <p>TU ESPACIO PERSONAL DE EMPLEADO</p>
+                <h1>Bienvenido señor/a, {{ session.get('usuarioLogueado', {}).get('nombre', 'cliente') }}</h1>
+                <p>Explora tus servicios.</p>
+            </section>
+            <br><br>
             <h1 class="profile-name">{{ usuario.nombreCompleto }}</h1>
                 <div class="profile-grid">
                     <div class="info"><div class="label">Tipo de documento</div><div class="value">{{ usuario.tipoDocumento }}</div></div>

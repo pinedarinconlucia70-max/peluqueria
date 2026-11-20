@@ -110,8 +110,7 @@ a {
     letter-spacing: .14em;
 }
 
-.service-grid,
-.category-grid {
+.service-grid {
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -287,3 +286,5 @@ td {
         padding: 28px 16px 50px;
     }
 }
+
+

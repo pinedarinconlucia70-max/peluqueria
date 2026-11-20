@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleCliente.css') }}">
     <title>Mi cuenta | D'JUAN CARLOS PELUQUERIA</title>
 </head>
 <body>
@@ -19,13 +19,14 @@
         {% for category, message in messages %}<p class="notice {{ category }}">{{ message }}</p>{% endfor %}
     {% endwith %}
     <section class="welcome">
-        <p class="eyebrow">TU ESPACIO PERSONAL</p>
-        <h1>Hola, {{ session.get('usuarioLogueado', {}).get('nombre', 'cliente') }}</h1>
+        <p class="eyebrow">TU ESPACIO PERSONAL DE CLIENTE</p>
+        <h1>Bienvenido señor/a, {{ session.get('usuarioLogueado', {}).get('nombre', 'cliente') }}</h1>
         <p>Explora nuestros servicios y solicita tu próxima cita.</p>
     </section>
 
     <section>
         <h2>Explorar servicios</h2>
+        <hr>
         <div class="category-grid">
             {% for slug, title in [
                 ('damas', 'Damas'),
@@ -41,6 +42,7 @@
             </a>
             {% endfor %}
         </div>
+        <hr>
     </section>
 
     <section class="appointments">

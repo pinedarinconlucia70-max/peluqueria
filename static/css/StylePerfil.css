@@ -42,6 +42,10 @@ body{
     padding:30px;
 }
 
+.welcome p {
+    color: #ad9853;
+}
+
 /* NOMBRE */
 
 .profile-name{
