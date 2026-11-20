@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleFormularios.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <title>Registrar usuario</title>
+</head>
+<body>
+<div class="card">
+    <form class="form-grid" action="{{ url_for('usuariosguardar') }}" method="post">
+        <h2 style="grid-column: span 2;">REGISTRA UN USUARIO</h2>
+        <label for="tipoDocumento">Tipo de documento</label>
+        <select id="tipoDocumento" name="tipoDocumento" required>
+            <option value="" disabled selected>Selecciona...</option>
+            <option value="TI">Tarjeta de Identidad</option>
+            <option value="CC">Cédula de ciudadanía</option>
+            <option value="CE">Cédula de extranjería</option>
+        </select>
+        <label for="numDocumento">Número de documento</label>
+        <input type="text" id="numDocumento" name="numDocumento" class="solo-numeros" maxlength="10" required>
+        <label for="nombreCompleto">Nombre y apellido</label>
+        <input type="text" id="nombreCompleto" name="nombreCompleto" required>
+        {% if tiene_apellido %}
+        <label for="apellido">Apellido</label>
+        <input type="text" id="apellido" name="apellido" required>
+        {% endif %}
+        <label for="telefono">Teléfono</label>
+        <input type="text" id="telefono" name="telefono" class="solo-numeros" maxlength="10" required>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        {% if tiene_direccion %}
+        <label for="direccion">Dirección</label>
+        <input type="text" id="direccion" name="direccion" required>
+        {% endif %}
+        <label for="genero">Género</label>
+        <select id="genero" name="genero" required>
+            <option value="" disabled selected>Selecciona...</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Otro">Otro</option>
+        </select>
+        <label for="idRolFK">Rol</label>
+        <select id="idRolFK" name="idRolFK" required>
+            <option value="" disabled selected>Selecciona...</option>
+            {% for rol in roles %}<option value="{{ rol.idRol }}">{{ rol.descripcionRol }}</option>{% endfor %}
+        </select>
+        <label for="cargo">Cargo</label>
+        <input type="text" id="cargo" name="cargo" required>
+        <label for="contrasenia">Contraseña</label>
+        <input type="password" id="contrasenia" name="contrasenia" required>
+        <a class="btn-cancelar" href="{{ url_for('listar_usuarios') }}">Cancelar</a>
+        <button type="submit" class="btn-login">Registrar</button>
+    </form>
+</div>
+</body>
+</html>

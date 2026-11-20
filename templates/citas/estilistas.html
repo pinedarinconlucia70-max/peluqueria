@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogo.css') }}">
+    <title>Confirmar cita | D'JUAN CARLOS PELUQUERIA</title>
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}">D'JUAN CARLOS PELUQUERIA</a>
+    <nav><a href="{{ url_for('portal_cliente') }}">Mi cuenta</a><a href="{{ url_for('logout') }}">Cerrar sesión</a></nav>
+</header>
+<main class="page narrow">
+    <a class="back-link" href="{{ url_for('citas_calendario') }}">Cambiar fecha</a>
+    <section class="welcome">
+        <p class="eyebrow">PASO 2 DE 2</p>
+        <h1>Confirma tu solicitud</h1>
+        <p>El estilista se asigna al servicio en el catálogo de la peluquería.</p>
+    </section>
+    <section class="booking-card summary">
+        <h2>{{ servicio.nombreServicio }}</h2>
+        <p>{{ reserva.fecha }} · {{ reserva.hora }}</p>
+        <p>Estilista asignado: <strong>{{ servicio.estilistaNombre or 'Equipo de peluquería' }}</strong></p>
+        <p>Total: <strong>${{ "{:,.0f}".format(servicio.precioBase) }}</strong></p>
+        <form method="post">
+            <button class="button" type="submit">Confirmar solicitud de cita</button>
+        </form>
+    </section>
+</main>
+<<<<<<< HEAD
+</body>
+=======
+</body>
+</html>
+>>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleFormularios.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <title>Actualizar cita</title>
+</head>
+<body>
+<div class="card">
+    <form class="form-grid" action="{{ url_for('citas_guardar') }}" method="post">
+        <h2 style="grid-column: span 2;">ACTUALIZACIÓN DE CITA</h2>
+        <input type="hidden" name="idCita" value="{{ cita.idCita }}">
+        <label for="idServicioFK">Servicio</label>
+        <select id="idServicioFK" name="idServicioFK" data-service-price="totalServicio" required>
+            {% for servicio in servicios %}<option value="{{ servicio.idServicio }}" data-price="{{ servicio.precioBase }}" {{ 'selected' if cita.idServicioFK == servicio.idServicio else '' }}>{{ servicio.nombreServicio }}</option>{% endfor %}
+        </select>
+        <label for="fecha">Fecha</label><input type="date" id="fecha" name="fecha" value="{{ cita.fecha.isoformat() if cita.fecha else '' }}" required>
+        {% if tiene_horario %}
+        <label for="horaInicio">Hora de inicio</label><input type="time" id="horaInicio" name="horaInicio" value="{{ cita.horaInicio|time_input }}" required>
+        <label for="horaFinal">Hora de finalización</label><input type="time" id="horaFinal" name="horaFinal" value="{{ cita.horaFinal|time_input }}">
+        {% endif %}
+        <label for="totalServicio">Total ($)</label><input type="number" id="totalServicio" name="totalServicio" min="0" step="0.01" value="{{ cita.totalServicio }}" required>
+        <label for="estado">Estado</label>
+        <select id="estado" name="estado" required>
+            {% for estado in ['Pendiente', 'Asistida', 'Cancelada'] %}<option value="{{ estado }}" {{ 'selected' if cita.estado == estado else '' }}>{{ estado }}</option>{% endfor %}
+        </select>
+        <label for="idUsuarioFK">Cliente</label>
+        <select id="idUsuarioFK" name="idUsuarioFK" required>
+            {% for usuario in usuarios %}<option value="{{ usuario.idUsuario }}" {{ 'selected' if cita.idUsuarioFK == usuario.idUsuario else '' }}>{{ usuario.nombreCompleto }}</option>{% endfor %}
+        </select>
+        <label for="idInsumoFK">Insumo asociado</label>
+        <select id="idInsumoFK" name="idInsumoFK" required>
+            {% for insumo in insumos %}<option value="{{ insumo.idInsumo }}" {{ 'selected' if cita.idInsumoFK == insumo.idInsumo else '' }}>{{ insumo.nombreInsumo }}</option>{% endfor %}
+        </select>
+        <label for="observacion">Observaciones</label><input id="observacion" name="observacion" maxlength="50" value="{{ cita.observacion or '' }}">
+        <a class="btn-cancelar" href="{{ url_for('listar_citas') }}">Cancelar</a>
+        <button type="submit" class="btn-login">Actualizar</button>
+    </form>
+</div>
+</body>
+</html>
