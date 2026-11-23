@@ -26,13 +26,26 @@ app.config["CLIENT_ROLE_ID"] = int(os.environ.get("CLIENT_ROLE_ID", "3"))
 _SCHEMA_CACHE = {}
 _ROLE_TABLE_NAME = None
 _INSUMO_CATEGORIES = {
-    "1": "Tintes y Coloración",
-    "2": "Químicos y Alisados",
-    "3": "Cuidado Capilar",
-    "4": "Uñas y Manicura",
-    "5": "Depilación y Estética",
-    "6": "Material Desechable",
-    "7": "Herramientas y Barbería",
+    "1": {
+        "title": "Tintes y Coloración",
+        "categories": {"Color", "tinte permanente"},
+    },
+    "2": {
+        "title": "Manicura y Uñas",
+        "categories": {"Semipermanente", "Acrílico", "Manicura"},
+    },
+    "3": {
+        "title": "Damas",
+        "categories": {"Cejas y Pestañas", "Ellas"},
+    },
+    "4": {
+        "title": "Caballeros",
+        "categories": {"Cejas y Pestañas", "Ellos"},
+    },
+    "5": {
+        "title": "Depilación",
+        "categories": {"depilacion"},
+    },
 }
 _ROLE_ADMIN = 1
 _ROLE_EMPLOYEE = 2
@@ -46,35 +59,35 @@ _SERVICE_CATALOGS = {
         "title": "Servicios para Caballeros",
         "categories": {"caballeros", "ellos"},
     },
-    "color": {
-        "title": "Color",
-        "categories": {"color"},
-    },
     "manos-y-pies": {
         "title": "Manos y Pies",
         "categories": {
+            "Retiros",
+            "Press On",
             "acrilico",
-            "combos",
+            "Combos",
             "decoracion",
             "manicura",
             "manos y pies",
             "mantenimiento",
             "pedicure",
-            "press on",
-            "retiros",
             "semipermanente",
             "unas",
             "spa",
         },
     },
+     "cejas-y-pestanas": {
+            "title": "Cejas y Pestañas",
+            "categories": {"cejas y pestanas"},
+        },
     "depilacion": {
         "title": "Depilación",
         "categories": {"depilacion"},
     },
-    "cejas-y-pestanas": {
-        "title": "Cejas y Pestañas",
-        "categories": {"cejas y pestanas"},
-    },
+     "color": {
+            "title": "Color",
+            "categories": {"color"},
+        },
 }
 
 
@@ -150,6 +163,51 @@ def _optional_form_integer(name):
 def _normalize_label(value):
     normalized = unicodedata.normalize("NFKD", str(value or ""))
     return "".join(character for character in normalized if not unicodedata.combining(character)).casefold().strip()
+
+def _insumo_category_id(value):
+    if value is None:
+        return ""
+    category_value = str(value).strip().lower()
+
+    if category_value in _INSUMO_CATEGORIES:
+        return category_value
+
+    for category_id, data in _INSUMO_CATEGORIES.items():
+        if category_value in data["categories"]:
+            return category_id
+    normalized_label = _normalize_label(category_value)
+    for category_id, data in _INSUMO_CATEGORIES.items():
+        if any(_normalize_label(cat) == normalized_label for cat in data["categories"]):
+            return category_id
+
+    return category_value
+
+
+def _service_category_id(value):
+    if value is None:
+        return "otros"
+    normalized_label = _normalize_label(value)
+    for category_id, data in _SERVICE_CATALOGS.items():
+        if normalized_label == category_id:
+            return category_id
+        if any(_normalize_label(category) == normalized_label for category in data["categories"]):
+            return category_id
+    return "otros"
+
+
+def _inventory_summary():
+    summary = _fetch_one(
+        "SELECT COALESCE(SUM(stockActual), 0) AS total_disponibles, "
+        "COALESCE(SUM(CASE WHEN stockActual <= stockMinPosible "
+        "THEN 1 ELSE 0 END), 0) AS stock_critico FROM insumo"
+    )
+    alerts = _fetch_all(
+        "SELECT idInsumo, nombreInsumo, stockActual, stockMinPosible "
+        "FROM insumo WHERE stockActual <= stockMinPosible "
+        "ORDER BY stockActual ASC, nombreInsumo ASC LIMIT 7"
+    )
+    return summary, alerts
+
 
 
 def _available_services():
@@ -670,7 +728,13 @@ def perfil_usuario():
     usuario = _current_user()
     if usuario is None:
         return redirect(url_for("login"))
-    return render_template("usuarios/perfilUsuario.html", usuario=usuario)
+    resumen_insumos, alertas_stock = _inventory_summary()
+    return render_template(
+        "usuarios/perfilUsuario.html",
+        usuario=usuario,
+        resumen_insumos=resumen_insumos,
+        alertas_stock=alertas_stock,
+    )
 
 
 @app.route("/usuarios/perfil/editar", methods=["GET", "POST"])
@@ -898,9 +962,21 @@ def citas_cambiar_estado(id, estado):
 
 @app.route("/insumos")
 def listar_insumos():
+    insumos = _fetch_all("SELECT * FROM insumo ORDER BY idInsumo ASC")
+    for insumo in insumos:
+        category_value = insumo.get("categoriaInsumo")
+
+        category_id = _insumo_category_id(category_value)
+        insumo["categoriaInsumoId"] = category_id
+        
+        if category_value is not None and str(category_value).strip():
+            insumo["categoriaInsumoNombre"] = str(category_value).strip()
+        else:
+            insumo["categoriaInsumoNombre"] = "Sin categoría"
+
     return render_template(
         "insumos/tablaInsumos.html",
-        insumos=_fetch_all("SELECT * FROM insumo ORDER BY idInsumo DESC"),
+        insumos=insumos,
         categorias=_INSUMO_CATEGORIES,
     )
 
@@ -947,17 +1023,28 @@ def insumos_formulario_actualizacion(id):
     insumo = _fetch_one("SELECT * FROM insumo WHERE idInsumo = %s", (id,))
     if insumo is None:
         abort(404)
+        
+    category_value = insumo.get("categoriaInsumo")
+    insumo["categoriaId"] = _insumo_category_id(category_value)
+
     return render_template(
-        "insumos/formularioActualizacionInsumos.html", insumo=insumo
+        "insumos/formularioActualizacionInsumos.html", 
+        insumo=insumo,
+        categorias=_INSUMO_CATEGORIES  # <-- ¡Agrega esta línea aquí!
     )
 
 
 @app.route("/servicios")
 def listar_servicios():
+    servicios = _fetch_all("SELECT * FROM servicio ORDER BY idServicio DESC")
+    for servicio in servicios:
+        servicio["categoriaId"] = _service_category_id(servicio.get("categoria"))
+
     return render_template(
         "servicios/tablaServicios.html",
-        servicios=_fetch_all("SELECT * FROM servicio ORDER BY idServicio DESC"),
+        servicios=servicios,
         tiene_duracion="duracion" in _table_columns("servicio"),
+        categorias=_SERVICE_CATALOGS,
     )
 
 
@@ -1031,7 +1118,13 @@ def usuarioperfil(id):
     usuario = _fetch_one(_user_query("WHERE u.idUsuario = %s"), (id,))
     if usuario is None:
         abort(404)
-    return render_template("usuarios/perfilUsuario.html", usuario=usuario)
+    resumen_insumos, alertas_stock = _inventory_summary()
+    return render_template(
+        "usuarios/perfilUsuario.html",
+        usuario=usuario,
+        resumen_insumos=resumen_insumos,
+        alertas_stock=alertas_stock,
+    )
 
 
 @app.errorhandler(400)
