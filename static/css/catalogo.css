@@ -105,20 +105,13 @@ a {
 
 .eyebrow {
     color: #8c7222 !important;
-<<<<<<< HEAD
-=======
     font-size: .78rem;
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
     font-weight: 600;
     letter-spacing: .14em;
 }
 
-<<<<<<< HEAD
-.service-grid {
-=======
 .service-grid,
 .category-grid {
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -239,7 +232,6 @@ a {
     font-size: .9rem;
 }
 
-<<<<<<< HEAD
 .booking-card.summary {
     border: 1px solid #c19a20;
     border-radius: 15px;
@@ -264,18 +256,11 @@ a {
     box-shadow: 0 0 10px #111111;
 }
 
-=======
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 .summary h2 {
     font-family: "Playfair Display", Georgia, serif;
     margin: 0;
 }
 
-.booking-card
-<<<<<<< HEAD
-=======
-
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 .empty-state,
 .notice {
     background: #fff;
@@ -327,9 +312,6 @@ td {
     }
 }
 
-<<<<<<< HEAD
-
-=======
 .service-image {
     width: 100%;
     height: 200px;
@@ -344,4 +326,3 @@ td {
     object-fit: cover;
     display: block;
 }
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7

@@ -76,22 +76,21 @@ _SERVICE_CATALOGS = {
             "spa",
         },
     },
-     "cejas-y-pestanas": {
+        "cejas-y-pestanas": {
             "title": "Cejas y Pestañas",
             "categories": {"cejas y pestanas"},
         },
-    "depilacion": {
+        "depilacion": {
         "title": "Depilación",
         "categories": {"depilacion"},
-    },
-     "color": {
+        },
+        "color": {
             "title": "Color",
             "categories": {"color"},
         },
 }
 
 
-<<<<<<< HEAD
 @app.template_filter("duracion_texto")
 def duracion_texto(duracion):
     if not duracion:
@@ -114,7 +113,6 @@ def duracion_texto(duracion):
     if horas > 0:
         return f"{horas} hora" if horas == 1 else f"{horas} horas"
     return f"{minutos} minutos"
-=======
 @app.template_filter("time_input")
 def time_input(value):
     if value is None:
@@ -125,7 +123,6 @@ def time_input(value):
         total_minutes = int(value.total_seconds() // 60)
         return f"{(total_minutes // 60) % 24:02d}:{total_minutes % 60:02d}"
     return str(value)[:5]
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 
 
 def _fetch_all(sql, params=()):
@@ -599,7 +596,10 @@ def catalogo_servicios(slug):
     services = [
         service
         for service in _available_services()
-        if _normalize_label(service["categoria"]) in catalog["categories"]
+        if any(
+            _normalize_label(service["categoria"]) == _normalize_label(category)
+            for category in catalog["categories"]
+        )
     ]
     return render_template(
         "servicios/catalogo.html",

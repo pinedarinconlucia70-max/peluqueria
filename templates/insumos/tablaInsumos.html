@@ -24,10 +24,6 @@
     {% for category, message in messages %}<p class="alert {{ category }}">{{ message }}</p>{% endfor %}
 {% endwith %}
 {% if insumos %}
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 <div class="insumos-layout">
     <div class="insumos-tabla-contenedor">
         <table>
@@ -52,10 +48,10 @@
         <div class="caja-filtros">
             <h3>Filtrar por categoría</h3>
             <div class="grupo-filtro">
-                 <button class="btn-filtro active" type="button" data-table-filter="todos" data-table-filter-target="tablaInsumos" aria-pressed="true">Todos</button>
-                 {% for id, info in categorias.items() %}
+                    <button class="btn-filtro active" type="button" data-table-filter="todos" data-table-filter-target="tablaInsumos" aria-pressed="true">Todos</button>
+                    {% for id, info in categorias.items() %}
                     <button class="btn-filtro" type="button" data-table-filter="{{ id }}" data-table-filter-target="tablaInsumos" aria-pressed="false">{{ info.title }}</button>
-                 {% endfor %}
+                    {% endfor %}
             </div>
         </div>
         <div class="paginacion">
@@ -65,28 +61,6 @@
         </div>
     </aside>
 </div>
-<<<<<<< HEAD
-
-=======
-=======
-<table>
-    <thead><tr><th>#</th><th>Nombre</th><th>Descripción</th><th>Vencimiento</th><th>Stock</th><th>Categoría</th><th>Acciones</th></tr></thead>
-    <tbody id="tablaInsumos">
-    {% for insumo in insumos %}
-    <tr>
-        <td class="celda-id">{{ insumo.idInsumo }}</td>
-        <td class="celda-nombre">{{ insumo.nombreInsumo }}</td>
-        <td>{{ insumo.descripcionInsumo }}</td>
-        <td>{{ insumo.fechaVencimiento.isoformat() if insumo.fechaVencimiento else 'N/A' }}</td>
-        <td class="info"><p class="principal">{{ insumo.stockActual }}</p><span>Mínimo: {{ insumo.stockMinPosible }}</span></td>
-        <td>{{ categorias.get(insumo.categoriaInsumo|string, 'Sin categoría') }}</td>
-        <td><a href="{{ url_for('insumos_formulario_actualizacion', id=insumo.idInsumo) }}" class="boton-editar boton-icono" title="Editar"><i class="fas fa-edit"></i></a></td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 {% else %}
 <div class="sin-resultados"><i class="fas fa-box-open"></i><p>No se encontraron insumos registrados</p></div>
 {% endif %}

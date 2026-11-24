@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
     <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleCliente.css') }}">
-=======
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styleCliente.css') }}">
     <title>Mi cuenta | D'JUAN CARLOS PELUQUERIA</title>
 </head>
@@ -23,11 +20,8 @@
         {% for category, message in messages %}<p class="notice {{ category }}">{{ message }}</p>{% endfor %}
     {% endwith %}
     <section class="welcome">
-<<<<<<< HEAD
         <p class="eyebrow">TU ESPACIO PERSONAL DE CLIENTE</p>
-=======
         <p class="eyebrow">Bienvenido a tu espacio personal de cliente</p>
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
         <h1>Bienvenido señor/a, {{ session.get('usuarioLogueado', {}).get('nombre', 'cliente') }}</h1>
         <p>Explora nuestros servicios y solicita tu próxima cita.</p>
     </section>
@@ -50,20 +44,16 @@
             </a>
             {% endfor %}
         </div>
-<<<<<<< HEAD
         <hr>
     </section>
-=======
     </section>
     <hr>
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 
     <section class="appointments">
         <h2>Mis citas</h2>
         {% if citas %}
         <div class="table-wrap">
             <table>
-<<<<<<< HEAD
                 <thead>
                     <tr>
                         <th>Servicio</th>
@@ -73,9 +63,6 @@
                         <th>Total</th>
                     </tr>
                 </thead>
-=======
-                <thead><tr><th>Servicio</th><th>Fecha</th><th>Estado</th><th>Detalle</th><th>Total</th></tr></thead>
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
                 <tbody>
                 {% for cita in citas %}
                     <tr>
@@ -95,13 +82,7 @@
     </section>
 </main>
 </body>
-<<<<<<< HEAD
+
 </html>
-</html>
-=======
-<<<<<<< HEAD
-</html>
-=======
-</html>
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
+
+

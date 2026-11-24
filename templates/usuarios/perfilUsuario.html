@@ -13,19 +13,9 @@
     <div class="profile-card">
         <div class="profile-content">
             <section class="welcome">
-<<<<<<< HEAD
                 <p>TU ESPACIO PERSONAL DE EMPLEADO</p>
                 <h1>Bienvenido señor/a, {{ session.get('usuarioLogueado', {}).get('nombre', 'cliente') }}</h1>
                 <p>Explora tus servicios.</p>
-            </section>
-            <br><br>
-            <h1 class="profile-name">{{ usuario.nombreCompleto }}</h1>
-            <section class="welcome">
-=======
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
-                <p class="eyebrow">Bienvenido a tu espacio personal de empleado</p>
-                <h1>Bienvenido señor/a, {{ session.get('usuarioLogueado', {}).get('nombre', 'cliente') }}</h1>
-                <p>Explora tus servicios y tus citas agendadas.</p>
             </section>
             <br><br>
             <div class="label">Nombre</div><h1 class="profile-name">{{ usuario.nombreCompleto }}</h1>
@@ -47,10 +37,7 @@
             <div class="day" id="miercoles">Miércoles</div><div class="day" id="jueves">Jueves</div>
             <div class="day" id="viernes">Viernes</div><div class="day" id="sabado">Sábado</div>
         </div>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
+
         <section class="inventory-summary" aria-labelledby="inventory-title">
             <h2 id="inventory-title" class="inventory-title">Resumen de Insumos</h2>
             <div class="inventory-metrics">
@@ -65,11 +52,7 @@
             </div>
             <a class="inventory-link" href="{{ url_for('listar_insumos') }}">Ir a Insumos</a>
         </section>
-<<<<<<< HEAD
-=======
-=======
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
+
     </div>
 </div>
 </body>
