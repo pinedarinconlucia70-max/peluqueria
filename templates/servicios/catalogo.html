@@ -7,6 +7,10 @@
     <title>{{ titulo }} | D'JUAN CARLOS PELUQUERIA</title>
 </head>
 <body>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 <header class="site-header">
     <a class="brand" href="{{ url_for('home') }}">D'JUAN CARLOS PELUQUERIA</a>
     <nav>
@@ -18,21 +22,174 @@
         {% endif %}
     </nav>
 </header>
+<<<<<<< HEAD
 <main class="page">
     <a class="back-link" href="{{ url_for('home', _anchor='servicios') }}">Todos los servicios</a>
+=======
+
+<main class="page">
+
+    <a class="back-link" href="{{ url_for('home', _anchor='servicios') }}">Todos los servicios</a>
+
+>>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
     <section class="welcome">
         <p class="eyebrow">CATÁLOGO</p>
         <h1>{{ titulo }}</h1>
         <p>Elige un servicio para consultar la disponibilidad y solicitar una cita.</p>
     </section>
+<<<<<<< HEAD
     {% if servicios %}
     <div class="service-grid">
         {% for servicio in servicios %}
         <article class="service-card">
+=======
+
+    {% if servicios %}
+    {% set imagenes_servicios = {
+        'Aplicación Capilar': 'tratamientocapi.webp',
+        'Capul': 'capul.jpg',
+        'Cepillado': 'cepillado.webp',
+        'Cepillado Cabello Afro': 'afro.jpg',
+        'Cepillado Cabello Corto': 'corto.jpg',
+        'Cepillado Cabello Extra Largo': 'extra.jpg',
+        'Cepillado Con Ondas En Plancha': 'planchada.jpg',
+        'Corte Dama': 'dama.webp',
+        'Definición De Crespos': 'crespos.jpg',
+        'Maquillaje Con Pestañas': 'maquillaje.jpg',
+        'Maquillaje Halloween': 'halloween.jpg',
+        'Maquillaje Sin Pestañas': 'maquillajesin.jpg',
+        'Ondas Con Plancha': 'plancha.jpg',
+        'Ondas De Agua Con Cepillado': 'onda.jpg',
+        'Ondas Pinza': 'pinza.png',
+        'Peinado Recogido': 'recogido.jpg',
+        'Planchado': 'planchado.jpg',
+        'Trenza Completa Una Sola': 'trenza1.jpg',
+        'Trenzas Grandes': 'grande.jpg',
+        'Trenzas Medianas': 'mediana.jpg',
+        'Trenzas Pequeñas': 'pequeña.jpg',
+
+
+        'Barba': 'barba.jpg',
+        'Barba Con Cera': 'bcera.jpg',
+        'Barba Vaporizada': 'vapor.jpg',
+        'Cepillado de Hombre': 'cepilladoh.avif',
+        'Contornos': 'contorno.jpg',
+        'Corte Caballero': 'corte.jpg',
+        'Corte Y Barba': 'corteybarba.jpg',
+        'Corte Y Barba Con Figuras': 'figura.jpg',
+        'Corte Y Barba Vaporizada': 'vapor2.jpg',
+        'Henna Hombre': 'henna.jpg',
+        'Marcación De Barba': 'marcacion.jpg',
+        'Mascarilla Black Head Hidratante': 'mascarilla.jpg',
+        'Pigmentación De Barba': 'pigmento.jpg',
+        
+
+        '6068 - Realización Color': 'decoloracio.jpg',
+        '6069 - Realización Keratina': 'keratina.jpg',
+        '6070 - Realización De Cera Fría': 'cera.png',
+        '6071 - Realización De Aminoácidos': 'aminoacidos.jpg',
+        '6072 - Realización De Células Madre': 'madre.jpg',
+        '6073 - Realización De Cirugía Capilar': 'cirugia.jpg',
+        '6074 - Realización De Repolarización': 'repo.jpg',
+        '6088 - Colocación De Extensiones': 'extensiones.jpg',
+        '6114 - Ondulado Semipermanente': 'ondulado.jpg',
+    
+
+        'Adicional en Largo de Acrílico': 'acrilico.jpg',
+        'Baño en Acrílico con Tradicional': 'uñastranspa.jpg',
+        'Extensiones de Uñas con Tips': 'tipies.jpg',
+        'Uña en Acrílico': 'acrilico2.jpg',
+        'Uñas en Acrílico (Set Completo)': 'setcompletoo.webp', 
+        'Adicional en el Decorado Acrílico': 'adicional.jpg',
+        'Uña Decorada Adicional': 'adicional2.jpg',
+        'Base Rubber': 'ruber.jpg',
+        'Cambio de Esmalte Manos': 'retiro.webp',
+        'Cambio Masglo Salon': 'masglo.webp',
+        'Manicura Decoración Básica': 'basico.png',
+        'Pegada de Uña Base Rubber': 'pegado.jpg',
+        'Polish De Uñas': 'polish.jpg',
+        'Retoque de Acrílico con Semi': 'retoque.jpg',
+        'Retoque Uñas Press On': 'press.jpg',
+        'Uña Pegada en Press On': 'presson.jpg',
+        'Cambio de Esmalte Pies': 'cambio.jpg',
+        'Pedicure Básico': 'pedibasico.jpg',
+        'Pies Masglo Salon': 'masglopie.jpg',
+        'Semi permanente hombre': 'semi.jpg',
+        'Semi-Permanente Decoración Básica': 'semideco.jpg',
+        'Aplicación de Vela en Aceite': 'vela.jpg',
+        'Dipping': 'dipping.webp',
+        'Poligel': 'poli.jpg',
+        'Manicura Masglo Salon': 'masglouña.jpg',
+
+
+    
+        'Abdomen Bajo': 'abdobajo.webp  ',
+        'Abdomen Completo': 'abdomen.jpg',
+        'Axilas': 'axila.webp',
+        'Barbilla': 'barbilla.jpg',
+        'Barbilla Con Hilo': 'barbihilo.jpg',
+        'Bigote Con Hilo': 'bigota.jpg',
+        'Bikini Parcial': 'parcial.png',
+        'Bikini Total': 'bikini.webp',
+        'Brazos': 'brazo.jpg',
+        'Cara Completa Con Cera': 'cara.jpeg',
+        'Cara Con Hilo': 'carahilo.jpg',
+        'Cejas Con Hilo': 'cejas.jpg',
+        'Depilación Completa': 'completa.webp',
+        'Depilación Completa Bikini Parcial': 'complepar.jpg',
+        'Depilación Masculina Completa': 'hombre.jpg',
+        'Depilación Pies': 'pies.jpg',
+        'Diseño De Cejas Con Hilo Y Pigmentadas': 'pigmentada.jpg',
+        'Espalda': 'espalda.jpg',
+        'Glúteos': 'gluteo.webp',
+        'Interglúteos': 'intergluteo.jpg',
+        'Manos Con Cera': 'manos.png',
+        'Media Pierna': 'mediapata.jpg',
+        'Mejillas Con Hilo': 'mejillas.jpg',
+        'Nariz': 'nariz.jpg',
+        'Orejas': 'orejañ.jpg',
+        'Patillas': 'patillas.jpg',
+        'Pecho': 'pecho.jpeg',
+        'Pierna Completa': 'patacomple.jpg',
+
+
+
+        'Bigote Con Cera': 'bigote.webp',
+        'Cejas con Cuchilla': 'cejascu.webp',
+        'Cejas con Visagismo Pigmentadas en Cera': 'visagismo.png',
+        'Cejas en Cera': 'cejascera.jpg',
+        'Cejas Pigmentadas en Cera': 'cejaspi.jpg',
+        'Cejas y Bigote': 'cejabi.jpg',
+        'Colocada de Pestañas Punto a Punto': 'punto.jpg',
+        'Colocada Pestañas de Tira': 'tira.webp',
+        'Laminado de Cejas': 'laminado.jpg',
+        'Mantenimiento de Pestañas': 'manteni.jpg',
+        'Ondulado de Pestañas': 'onduladope.jpg',
+
+
+
+
+        
+    } %}        
+    <div class="service-grid">
+
+        {% for servicio in servicios %}
+        {% set archivo_img = imagenes_servicios.get(servicio.nombreServicio, 'tratamientocapi.webp') %}
+        <article class="service-card">
+
+            
+            <div class="service-image">
+                <img
+                    src="{{ url_for('static', filename='imgservi/' + archivo_img) }}"
+                    alt="{{ servicio.nombreServicio }}">
+            </div>
+
+>>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
             <div class="service-card-top">
                 <span class="tag">{{ servicio.categoria }}</span>
                 <span class="price">${{ "{:,.0f}".format(servicio.precioBase) }}</span>
             </div>
+<<<<<<< HEAD
             <h2>{{ servicio.nombreServicio }}</h2>
             <p>{{ servicio.descripcionServicio }}</p>
             <p class="duration">Duración aproximada: {{ servicio.duracion | duracion_texto }}</p>
@@ -50,3 +207,37 @@
 </main>
 </body>
 </html>
+=======
+
+            <h2>{{ servicio.nombreServicio }}</h2>
+
+            <p>{{ servicio.descripcionServicio }}</p>
+
+            <p class="duration">
+                Duración aproximada: {{ servicio.duracion | time_input }}
+            </p>
+
+            <form action="{{ url_for('seleccionar_servicio') }}" method="post">
+                <input type="hidden" name="service_id" value="{{ servicio.idServicio }}">
+                <input type="hidden" name="catalog_slug" value="{{ slug }}">
+
+                <button class="button" type="submit">
+                    Reservar este servicio
+                </button>
+            </form>
+
+        </article>
+        {% endfor %}
+
+    </div>
+    {% else %}
+        <p class="empty-state">
+            No hay servicios disponibles en esta categoría por el momento.
+        </p>
+    {% endif %}
+
+</main>
+
+</body>
+</html>
+>>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7

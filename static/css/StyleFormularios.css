@@ -98,7 +98,11 @@ button, .btn-cancelar{
 flex:1;
 padding:16px;
 margin: 15px 5px 0 5px;
+<<<<<<< HEAD
 width: 200px;
+=======
+width: 235px;
+>>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 border:none;
 cursor:pointer;
 font-size:15px;

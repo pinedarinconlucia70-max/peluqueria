@@ -91,6 +91,7 @@ _SERVICE_CATALOGS = {
 }
 
 
+<<<<<<< HEAD
 @app.template_filter("duracion_texto")
 def duracion_texto(duracion):
     if not duracion:
@@ -113,6 +114,18 @@ def duracion_texto(duracion):
     if horas > 0:
         return f"{horas} hora" if horas == 1 else f"{horas} horas"
     return f"{minutos} minutos"
+=======
+@app.template_filter("time_input")
+def time_input(value):
+    if value is None:
+        return ""
+    if hasattr(value, "strftime"):
+        return value.strftime("%H:%M")
+    if hasattr(value, "total_seconds"):
+        total_minutes = int(value.total_seconds() // 60)
+        return f"{(total_minutes // 60) % 24:02d}:{total_minutes % 60:02d}"
+    return str(value)[:5]
+>>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 
 
 def _fetch_all(sql, params=()):
