@@ -105,7 +105,6 @@ a {
 
 .eyebrow {
     color: #8c7222 !important;
-    font-size: .78rem;
     font-weight: 600;
     letter-spacing: .14em;
 }
@@ -231,16 +230,36 @@ a {
     font-size: .9rem;
 }
 
+.booking-card.summary {
+    border: 1px solid #c19a20;
+    border-radius: 15px;
+    padding: 2vh;
+    min-height: 100px;
+    transition: ease 0.3s;
+}
+
+.booking-card.summary p {
+    border-radius: 5px;
+    padding: 5px 10px ;
+    font-size: 20px;
+    background-color: #68645a3a;
+    transition: ease-in 0.1s;
+}
+
+.booking-card.summary:hover {
+    box-shadow: 0 0 40px #b49128;
+}
+
+.booking-card.summary p:hover {
+    box-shadow: 0 0 10px #111111;
+}
+
 .summary h2 {
     font-family: "Playfair Display", Georgia, serif;
     margin: 0;
 }
 
-<<<<<<< HEAD
-=======
 .booking-card
-
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
 .empty-state,
 .notice {
     background: #fff;

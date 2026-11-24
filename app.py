@@ -91,16 +91,28 @@ _SERVICE_CATALOGS = {
 }
 
 
-@app.template_filter("time_input")
-def time_input(value):
-    if value is None:
+@app.template_filter("duracion_texto")
+def duracion_texto(duracion):
+    if not duracion:
         return ""
-    if hasattr(value, "strftime"):
-        return value.strftime("%H:%M")
-    if hasattr(value, "total_seconds"):
-        total_minutes = int(value.total_seconds() // 60)
-        return f"{(total_minutes // 60) % 24:02d}:{total_minutes % 60:02d}"
-    return str(value)[:5]
+
+    if isinstance(duracion, timedelta):
+        total_seg = int(duracion.total_seconds())
+        horas = total_seg // 3600
+        minutos = (total_seg % 3600) // 60
+    elif isinstance(duracion, time):
+        horas = duracion.hour
+        minutos = duracion.minute
+    else:
+        partes = str(duracion).split(":")
+        horas = int(partes[0]) if len(partes) > 0 else 0
+        minutos = int(partes[1]) if len(partes) > 1 else 0
+
+    if horas > 0 and minutos > 0:
+        return f"{horas} h {minutos} min"
+    if horas > 0:
+        return f"{horas} hora" if horas == 1 else f"{horas} horas"
+    return f"{minutos} minutos"
 
 
 def _fetch_all(sql, params=()):

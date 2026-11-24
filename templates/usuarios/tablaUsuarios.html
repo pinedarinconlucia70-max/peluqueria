@@ -26,11 +26,21 @@
     {% for usr in usuarios %}
     <tr>
         <td>{{ usr.idUsuario }}</td>
-        <td class="info"><p class="principal">{{ usr.nombreCompleto }}</p><span>{{ usr.genero }}</span></td>
-        <td class="info"><p>{{ usr.numDocumento }}</p><span>{{ usr.tipoDocumento }}</span></td>
+        <td class="info">
+            <p class="principal">{{ usr.nombreCompleto }}</p>
+            <span>{{ usr.genero }}</span>
+        </td>
+        <td class="info">
+            <p>{{ usr.numDocumento }}</p>
+            <span>{{ usr.tipoDocumento }}</span>
+        </td>
         <td>{{ usr.telefono }}</td>
         <td>{{ usr.email }}</td>
-        <td class="info"><p class="principal">{{ usr.cargo or 'Sin cargo' }}</p><span>{{ usr.descripcionRol or usr.idRolFK }}</span></td>
+        <td class="info">
+            <p class="principal">{{ usr.cargo or 'Sin cargo' }}</p>
+            <span>{{ usr.descripcionRol or usr.idRolFK }}</span>
+        </td>
+        
         <td><span class="{{ 'estado-activo' if usr.estado == 'Activo' else 'estado-inactivo' }}">{{ usr.estado }}</span></td>
         <td>
             <a href="{{ url_for('usuarios_editar', id=usr.idUsuario) }}" class="boton-editar boton-icono" title="Editar"><i class="fas fa-edit"></i></a>

@@ -35,7 +35,7 @@
             </div>
             <h2>{{ servicio.nombreServicio }}</h2>
             <p>{{ servicio.descripcionServicio }}</p>
-            <p class="duration">Duración aproximada: {{ servicio.duracion | time_input }}</p>
+            <p class="duration">Duración aproximada: {{ servicio.duracion | duracion_texto }}</p>
             <form action="{{ url_for('seleccionar_servicio') }}" method="post">
                 <input type="hidden" name="service_id" value="{{ servicio.idServicio }}">
                 <input type="hidden" name="catalog_slug" value="{{ slug }}">
