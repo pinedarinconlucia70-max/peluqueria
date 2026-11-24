@@ -21,7 +21,6 @@
     {% endwith %}
     <section class="welcome">
         <p class="eyebrow">TU ESPACIO PERSONAL DE CLIENTE</p>
-        <p class="eyebrow">Bienvenido a tu espacio personal de cliente</p>
         <h1>Bienvenido señor/a, {{ session.get('usuarioLogueado', {}).get('nombre', 'cliente') }}</h1>
         <p>Explora nuestros servicios y solicita tu próxima cita.</p>
     </section>
@@ -47,7 +46,6 @@
         <hr>
     </section>
     </section>
-    <hr>
 
     <section class="appointments">
         <h2>Mis citas</h2>

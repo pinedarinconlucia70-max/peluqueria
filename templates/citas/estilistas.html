@@ -21,7 +21,6 @@
     <section class="booking-card summary">
         <h2>{{ servicio.nombreServicio }}</h2>
         <p>Fecha y hora del servicio: <strong>{{ reserva.fecha }} · {{ reserva.hora }}</strong></p>
-        <p>{{ reserva.fecha }} · {{ reserva.hora }}</p>
         <p>Estilista asignado: <strong>{{ servicio.estilistaNombre or 'Equipo de peluquería' }}</strong></p>
         <p>Total: <strong>${{ "{:,.0f}".format(servicio.precioBase) }}</strong></p>
         <form method="post">
