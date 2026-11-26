@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleTablas.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="{{ url_for('static', filename='js/table-actions.js') }}" defer></script>
+    <title>Insumos | D'JUAN CARLOS PELUQUERIA</title>
+</head>
+<body>
+<div class="header">
+    <h2>Lista de Insumos</h2>
+    <div class="contenedor-buscador">
+        <i class="fa-solid fa-magnifying-glass icono-buscador"></i>
+        <input type="search" class="input-buscador" placeholder="Buscar por ID o nombre..." data-table-search="tablaInsumos">
+    </div>
+    <div class="acciones-header">
+        <button class="btn-pdf" type="button" data-print><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button>
+        <a class="btn-registrar" href="{{ url_for('insumos_formulario_registro') }}"><i class="fa-solid fa-plus"></i> Registrar</a>
+    </div>
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}<p class="alert {{ category }}">{{ message }}</p>{% endfor %}
+{% endwith %}
+{% if insumos %}
+<div class="insumos-layout">
+    <div class="insumos-tabla-contenedor">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Vencimiento</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaInsumos">
+            {% for insumo in insumos %}
+            <tr data-category="{{ insumo.categoriaInsumoId }}">
+                <td class="celda-id">{{ insumo.idInsumo }}</td>
+                <td class="celda-nombre">{{ insumo.nombreInsumo }}</td>
+                <td>{{ insumo.descripcionInsumo }}</td>
+                <td>{{ insumo.fechaVencimiento.isoformat() if insumo.fechaVencimiento else 'N/A' }}</td>
+                <td class="info"><p class="principal">{{ insumo.stockActual }}</p><span>Mínimo: {{ insumo.stockMinPosible }}</span></td>
+                <td>{{ insumo.categoriaInsumoNombre }}</td>
+                <td><a href="{{ url_for('insumos_formulario_actualizacion', id=insumo.idInsumo) }}" class="boton-editar boton-icono" title="Editar"><i class="fas fa-edit"></i></a></td>
+            </tr>
+            {% endfor %}
+            <tr data-table-empty hidden><td colspan="7">No hay insumos que coincidan con la búsqueda o el filtro.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <aside class="insumos-controles">
+        <div class="caja-filtros">
+            <h3>Filtrar por categoría</h3>
+            <div class="grupo-filtro">
+                    <button class="btn-filtro active" type="button" data-table-filter="todos" data-table-filter-target="tablaInsumos" aria-pressed="true">Todos</button>
+                    {% for id, info in categorias.items() %}
+                    <button class="btn-filtro" type="button" data-table-filter="{{ id }}" data-table-filter-target="tablaInsumos" aria-pressed="false">{{ info.title }}</button>
+                    {% endfor %}
+            </div>
+        </div>
+        <div class="paginacion">
+            <button class="btn-pag" type="button" data-table-pagination="prev" data-table-pagination-target="tablaInsumos">Anterior</button>
+            <span class="pagina-actual" data-table-pagination="current" data-table-pagination-target="tablaInsumos">1 / 1</span>
+            <button class="btn-pag" type="button" data-table-pagination="next" data-table-pagination-target="tablaInsumos">Siguiente</button>
+        </div>
+    </aside>
+</div>
+{% else %}
+<div class="sin-resultados"><i class="fas fa-box-open"></i><p>No se encontraron insumos registrados</p></div>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogo.css') }}">
+    <title>Calendario de Citas | D'JUAN CARLOS PELUQUERIA</title>
+    <style>
+        .page-narrow{display: flex; justify-content: center; align-items: center;}
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .day-name { text-align: center; font-weight: bold; padding: 6px; }
+        .day-cell { min-height: 68px; border: 1px solid #ddd; border-radius: 8px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; }
+        .day-cell.disabled { opacity: 0.4; background: #f5f5f5; }
+        .day-cell.selected { border: 2px solid #111; background: #f9f9f9; }
+        .day-btn { width: 100%; padding: 6px; cursor: pointer; border-radius: 6px; border: 1px solid #222; background: #fff; }
+        .day-btn:hover { background: #111; color: #fff; }
+        #monthTitle{ text-align: center; }
+        #prevMonth{width: 20vh;}
+        #nextMonth{width: 20vh;}
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}">D'JUAN CARLOS PELUQUERIA</a>
+    <nav>
+        <a href="{{ url_for('portal_cliente') }}">Mi cuenta</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </nav>
+</header>
+
+<main class="page narrow">
+    <a class="back-link" href="{{ url_for('catalogo_servicios', slug=catalog_slug) }}">Volver al catálogo</a>
+    <section class="welcome">
+        <p class="eyebrow">PASO 1 DE 2 · FECHA</p>
+        <h1>Selecciona el día de tu cita</h1>
+        <p>Servicio: <strong>{{ servicio.nombreServicio }}</strong></p>
+    </section>
+
+    <div class="calendar-header">
+            <button type="button" id="prevMonth" class="button">Mes anterior</button>
+            
+            <button type="button" id="nextMonth" class="button">Mes siguiente</button>
+        </div>
+
+    <div class="booking-card">
+        
+        <h2 id="monthTitle"></h2>
+
+        <div class="calendar-grid" id="calendarGrid"></div>
+
+        <form method="post" id="dateForm" style="margin-top: 1rem;">
+            <input type="hidden" name="fecha" id="selectedDateInput" required>
+            <p id="selectedDateLabel">Ningún día seleccionado todavía.</p>
+            <button type="submit" class="button" id="confirmDateBtn" disabled>
+                Ver horas disponibles
+            </button>
+        </form>
+    </div>
+</main>
+
+<script>
+    const minDateStr = "{{ fecha_minima }}";
+    const [minY, minM, minD] = minDateStr.split("-").map(Number);
+    const minDate = new Date(minY, minM - 1, minD);
+
+    let viewYear = minY;
+    let viewMonth = minM - 1;
+
+    const monthNames = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+    const dayNames = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+
+    const grid = document.getElementById("calendarGrid");
+    const monthTitle = document.getElementById("monthTitle");
+    const selectedInput = document.getElementById("selectedDateInput");
+    const selectedLabel = document.getElementById("selectedDateLabel");
+    const confirmBtn = document.getElementById("confirmDateBtn");
+
+    function formatISO(y, m0, d) {
+        return `${y}-${String(m0 + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    }
+
+    function renderCalendar() {
+        grid.innerHTML = "";
+        monthTitle.textContent = `${monthNames[viewMonth]} ${viewYear}`;
+
+        dayNames.forEach(name => {
+            const header = document.createElement("div");
+            header.className = "day-name";
+            header.textContent = name;
+            grid.appendChild(header);
+        });
+
+        const firstDay = new Date(viewYear, viewMonth, 1);
+        const startOffset = (firstDay.getDay() + 6) % 7;
+        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+        for (let i = 0; i < startOffset; i++) {
+            const empty = document.createElement("div");
+            empty.className = "day-cell disabled";
+            grid.appendChild(empty);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const cellDate = new Date(viewYear, viewMonth, day);
+            const iso = formatISO(viewYear, viewMonth, day);
+            const cell = document.createElement("div");
+            cell.className = "day-cell";
+            if (selectedInput.value === iso) {
+                cell.classList.add("selected");
+            }
+
+            const numSpan = document.createElement("span");
+            numSpan.textContent = day;
+            cell.appendChild(numSpan);
+
+            if (cellDate < minDate) {
+                cell.classList.add("disabled");
+            } else {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "day-btn";
+                btn.textContent = "Citas";
+                btn.addEventListener("click", () => {
+                    selectedInput.value = iso;
+                    selectedLabel.textContent = `Fecha elegida: ${iso}`;
+                    confirmBtn.disabled = false;
+                    renderCalendar();
+                });
+                cell.appendChild(btn);
+            }
+
+            grid.appendChild(cell);
+        }
+
+        document.getElementById("prevMonth").disabled =
+            (viewYear === minY && viewMonth <= minM - 1);
+    }
+
+    document.getElementById("prevMonth").addEventListener("click", () => {
+        if (viewYear === minY && viewMonth <= minM - 1) return;
+        viewMonth--;
+        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+        renderCalendar();
+    });
+
+    document.getElementById("nextMonth").addEventListener("click", () => {
+        viewMonth++;
+        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+        renderCalendar();
+    });
+
+    renderCalendar();
+</script>
+</body>
+</html>

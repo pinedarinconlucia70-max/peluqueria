@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/LOGO.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleFormularios.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleLogin.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <title>Iniciar sesión | D' JUAN CARLOS PELUQUERIA</title>
+</head>
+<body>
+
+<button class="back" type="button" data-back>
+    <i class="fas fa-arrow-left"></i>
+</button>
+
+<div class="card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}<p class="alert {{ category }}">{{ message }}</p>{% endfor %}
+    {% endwith %}
+    <div id="container-login">
+        <form action="{{ url_for('login') }}" method="post">
+
+            <h2>INGRESA</h2>
+
+            <label for="numDocumentoLogin">Número de documento</label>
+            <input type="text" id="numDocumentoLogin" name="numDocumento" class="solo-numeros" maxlength="10" required autofocus /><br />
+
+            <label for="contraseniaLogin">Contraseña</label>
+            <input type="password" id="contraseniaLogin" name="contrasenia" required /><br />
+
+            <div class="buttons">
+                <button type="submit" class="btn-login">Iniciar Sesion</button>
+            </div>
+
+            <div class="switch">
+                <p class="text">¿No tienes cuenta? <a href="#registro" data-show-register>REGISTRAR</a></p>
+            </div>
+
+        </form>
+    </div>
+
+    <div id="container-registro" hidden>
+        <form class="form-grid" action="{{ url_for('registrar_cliente') }}" method="post">
+
+            <h2 style="grid-column: span 2;">REGÍSTRATE</h2>
+
+            <label for="tipoDocumento">Tipo de documento</label>
+            <select id="tipoDocumento" name="tipoDocumento" required>
+                <option value="" disabled selected hidden>Selecciona...</option>
+                <option value="TI">Tarjeta de Identidad</option>
+                <option value="CC">Cédula de ciudadania</option>
+                <option value="CE">Cédula de extranjería</option>
+            </select>
+
+            <label for="numDocumento">Número de documento</label>
+            <input type="text" id="numDocumento" name="numDocumento" class="solo-numeros" maxlength="10" required />
+
+            <label for="nombreCompleto">Nombre completo</label>
+            <input type="text" id="nombreCompleto" name="nombreCompleto" required />
+
+            {% if tiene_apellido %}
+            <label for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido" required />
+            {% endif %}
+
+            <label for="telefono">Teléfono</label>
+            <input type="text" id="telefono" name="telefono" class="solo-numeros" maxlength="10" required />
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+
+            {% if tiene_direccion %}
+            <label for="direccion">Dirección</label>
+            <input type="text" id="direccion" name="direccion" required />
+            {% endif %}
+
+            <label for="genero">Género</label>
+            <select id="genero" name="genero" required>
+                <option value="" disabled selected hidden>Selecciona...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+            </select>
+
+            <label for="contrasenia">Contraseña</label>
+            <input type="password" id="contrasenia" name="contrasenia" required />
+
+            <div class="buttons">
+                <button type="submit" class="btn-login">Registrarme</button>
+            </div>
+
+            <div class="switch">
+                <p class="text">¿Ya tienes cuenta? <a href="#login" data-show-login>LOGIN</a></p>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

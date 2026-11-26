@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogo.css') }}">
+    <title>Horas Disponibles | D'JUAN CARLOS PELUQUERIA</title>
+    <style>
+        .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin: 1rem 0; }
+        .slot-btn { padding: 10px; border-radius: 8px; border: 1px solid #222; background: #fff; cursor: pointer; font-weight: 600; }
+        .slot-btn.active { background: #111; color: #fff; }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}">D'JUAN CARLOS PELUQUERIA</a>
+    <nav>
+        <a href="{{ url_for('portal_cliente') }}">Mi cuenta</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </nav>
+</header>
+
+<main class="page narrow">
+    <a class="back-link" href="{{ url_for('citas_calendario') }}">← Cambiar fecha</a>
+    <section class="welcome">
+        <p class="eyebrow">PASO 2 DE 2 · ESTILISTA Y HORA (08:00 - 22:00)</p>
+        <h1>Elige estilista y hora disponible</h1>
+        <p>
+            Servicio: <strong>{{ servicio.nombreServicio }}</strong> ({{ duracion_texto_str }}) ·
+            Fecha: <strong>{{ fecha }}</strong>
+        </p>
+    </section>
+
+    <form class="booking-card" method="post" id="slotForm">
+        <label for="estilistaSelect">Estilista</label>
+        <select id="estilistaSelect" name="estilista_id" required>
+            {% for est in estilistas %}
+            <option value="{{ est.idUsuario }}" {% if est.idUsuario == estilista_seleccionado.idUsuario %}selected{% endif %}>
+                {{ est.nombreCompleto }}{% if est.cargo %} — {{ est.cargo }}{% endif %}
+            </option>
+            {% endfor %}
+        </select>
+
+        <input type="hidden" name="hora" id="selectedHourInput" required>
+
+        <p style="margin-top: 1rem;"><strong>Horas disponibles:</strong></p>
+        <div class="slots-grid" id="slotsGrid">
+            {% set ns = namespace(hay_horas=false) %}
+            {% for s in slots %}
+                {% if s.disponible %}
+                    {% set ns.hay_horas = true %}
+                    <button type="button" class="slot-btn" data-hora="{{ s.hora }}">{{ s.hora }}</button>
+                {% endif %}
+            {% endfor %}
+            {% if not ns.hay_horas %}
+                <p id="noSlotsMsg">No hay horas disponibles para este estilista en la fecha seleccionada.</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="button" id="submitSlotBtn" disabled>Confirmar cita</button>
+    </form>
+</main>
+
+<script>
+    const fecha = "{{ fecha }}";
+    const estilistaSelect = document.getElementById("estilistaSelect");
+    const slotsGrid = document.getElementById("slotsGrid");
+    const hourInput = document.getElementById("selectedHourInput");
+    const submitBtn = document.getElementById("submitSlotBtn");
+
+    function bindSlotButtons() {
+        hourInput.value = "";
+        submitBtn.disabled = true;
+        slotsGrid.querySelectorAll(".slot-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                slotsGrid.querySelectorAll(".slot-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                hourInput.value = btn.dataset.hora;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+
+    estilistaSelect.addEventListener("change", async () => {
+        const estilistaId = estilistaSelect.value;
+        const url = `{{ url_for('citas_horarios_disponibilidad') }}?fecha=${encodeURIComponent(fecha)}&estilista_id=${encodeURIComponent(estilistaId)}`;
+        const resp = await fetch(url);
+        if (!resp.ok) return;
+        const data = await resp.json();
+
+        slotsGrid.innerHTML = "";
+        if (!data.slots || data.slots.length === 0) {
+            slotsGrid.innerHTML = "<p>No hay horas disponibles para este estilista en la fecha seleccionada.</p>";
+            hourInput.value = "";
+            submitBtn.disabled = true;
+            return;
+        }
+
+        data.slots.forEach(slot => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "slot-btn";
+            btn.dataset.hora = slot.hora;
+            btn.textContent = slot.hora;
+            slotsGrid.appendChild(btn);
+        });
+        bindSlotButtons();
+    });
+
+    bindSlotButtons();
+</script>
+</body>
+</html>

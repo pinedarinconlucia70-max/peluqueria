@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/LOGO.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleDashboard.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <title>Panel | D'JUAN CARLOS PELUQUERIA</title>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div class="logo">D'JUAN CARLOS PELUQUERIA</div>
+    <div class="menu">
+
+        <!-- Enlaces hacia los endpoints mapeados en tu app.py -->
+        <button type="button" data-dashboard-url="{{ url_for('perfil_usuario') }}" class="active">Perfil</button>
+
+        <!-- Renderizado condicional según el Rol guardado en la sesión de Flask -->
+        {% if session.get('usuarioLogueado') and session['usuarioLogueado'].get('idRolFK') == 1 %}
+            <button type="button" data-dashboard-url="{{ url_for('listar_usuarios') }}">Usuarios</button>
+        {% endif %}
+
+        <button type="button" data-dashboard-url="{{ url_for('listar_citas') }}">Citas</button>
+        <button type="button" data-dashboard-url="{{ url_for('listar_insumos') }}">Insumos</button>
+
+        {% if session.get('usuarioLogueado') and session['usuarioLogueado'].get('idRolFK') == 1 %}
+            <button type="button" data-dashboard-url="{{ url_for('listar_servicios') }}">Servicios</button>
+        {% endif %}
+
+        <a href="{{ url_for('logout') }}" style="text-decoration:none;">
+            <button class="btn-cerrar-sesion">Cerrar Sesión</button>
+        </a>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="iframe-card">
+        <iframe id="frame" src="{{ url_for('perfil_usuario') }}"></iframe>
+    </div>
+</div>
+
+</body>
+</html>

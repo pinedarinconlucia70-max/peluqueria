@@ -1,0 +1,177 @@
+:root{
+--dorado:#D4AF37;
+--negro-puro:#0a0a0a;
+--negro-suave:#1a1a1a;
+--blanco:#fff;
+--gris-claro:#f9f9f9;
+--gris-texto:#555;
+--transition:all .5s cubic-bezier(.23,1,.32,1);
+}
+
+body{
+margin:0;
+font-family:Poppins, sans-serif;
+background: transparent;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding: 10px 0;
+box-sizing: border-box;
+}
+
+/* BOTON VOLVER */
+
+.back{
+position: fixed;
+top:25px;
+left:25px;
+z-index: 100;
+color:var(--dorado);
+font-size:24px;
+text-decoration:none;
+padding: 10px 13.5px;
+border-radius: 5000000000px;
+border: 2px solid var(--dorado);
+transition:.3s;
+cursor: pointer;
+}
+
+.back:hover{
+transform:translateX(-5px);
+}
+
+/* CARD MEJORADA */
+
+.card{
+background:white;
+padding:50px;
+border-radius:35px;
+width:900px;
+max-width:95%;
+box-shadow:0 20px 50px rgba(0, 0, 0, 0.808);
+transition:.3s;
+}
+
+
+
+/* TITULO */
+
+h2{
+text-align:center;
+color:var(--dorado);
+margin-bottom:30px;
+font-size:28px;
+letter-spacing:1px;
+}
+
+/* LOGIN */
+
+.card {
+width: 500px;
+}
+
+/* INPUTS */
+
+label{
+color:black;
+font-size:13px;
+margin-bottom:5px;
+display:block;
+}
+
+input, select{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:1px solid #ddd;
+outline:none;
+transition:.3s;
+}
+
+input:focus, select:focus{
+border-color:var(--dorado);
+box-shadow:0 0 8px rgba(212,175,55,0.4);
+}
+
+button, .btn-cancelar{
+flex:1;
+padding:16px;
+margin: 15px 5px 0 5px;
+width: 200px;
+width: 235px;
+border:none;
+cursor:pointer;
+font-size:15px;
+border-radius:25px;
+transition:all .3s ease;
+}
+
+/* BOTONES */
+
+.btn-cancelar {
+    background: white;
+    color: black;
+    border: 1px solid var(--dorado);
+    text-decoration: none;
+    padding: 15px 15vh;
+}
+
+.btn-login{
+    background:black;
+    color:white;
+}
+
+.btn-login:hover, .btn-cancelar:hover{
+background:var(--dorado);
+color:black;
+transform:scale(1.03);
+}
+
+.card.insumo-card {
+    box-sizing: border-box;
+    max-width: 95%;
+    width: 680px;
+}
+
+.insumo-form {
+    display: grid;
+    gap: 10px 16px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+}
+
+.insumo-form h2 {
+    grid-column: 1 / -1;
+}
+
+.insumo-form input,
+.insumo-form select {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.insumo-form .btn-cancelar,
+.insumo-form .btn-login {
+    box-sizing: border-box;
+    margin: 15px 0 0;
+    min-width: 0;
+    padding: 12px;
+    text-align: center;
+    width: 100%;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:700px){
+.form-grid{
+grid-template-columns:1fr;
+}
+
+.card.insumo-card {
+    padding: 28px;
+}
+
+.insumo-form h2 {
+    grid-column: 1;
+}
+}

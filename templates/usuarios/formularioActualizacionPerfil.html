@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar perfil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleFormularios.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body>
+<div class="card">
+    <form class="form-grid" action="{{ url_for('editar_perfil') }}" method="post">
+        <h2 style="grid-column: span 2;">ACTUALIZACIÓN DE PERFIL</h2>
+        <label for="nombreCompleto">Nombre y apellido</label>
+        <input type="text" id="nombreCompleto" name="nombreCompleto" value="{{ usuario.nombreCompleto }}" required>
+        {% if tiene_apellido %}
+        <label for="apellido">Apellido</label>
+        <input type="text" id="apellido" name="apellido" value="{{ usuario.apellido }}" required>
+        {% endif %}
+        <label for="genero">Género</label>
+        <select id="genero" name="genero" required>
+            {% for genero in ['Masculino', 'Femenino', 'Otro'] %}<option value="{{ genero }}" {{ 'selected' if usuario.genero == genero else '' }}>{{ genero }}</option>{% endfor %}
+        </select>
+        <label for="telefono">Teléfono</label>
+        <input type="text" id="telefono" name="telefono" class="solo-numeros" maxlength="10" value="{{ usuario.telefono }}" required>
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" value="{{ usuario.email }}" required>
+        {% if tiene_direccion %}
+        <label for="direccion">Dirección</label>
+        <input type="text" id="direccion" name="direccion" value="{{ usuario.direccion }}" required>
+        {% endif %}
+        <a class="btn-cancelar" href="{{ url_for('perfil_usuario') }}">Cancelar</a>
+        <button type="submit" class="btn-login">Actualizar</button>
+    </form>
+</div>
+</body>
+</html>
