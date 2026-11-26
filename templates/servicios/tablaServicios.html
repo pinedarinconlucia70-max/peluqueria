@@ -27,7 +27,18 @@
 <div class="servicios-layout">
     <div class="servicios-tabla-contenedor">
         <table>
-            <thead><tr><th>#</th><th>Servicio</th><th>Categoría</th><th>Descripción</th>{% if tiene_duracion %}<th>Duración</th>{% endif %}<th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Servicio</th>
+                    <th>Categoría</th>
+                    <th>Descripción</th>{% if tiene_duracion %}
+                    <th>Duración</th>{% endif %}
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
             <tbody id="tablaServicios">
             {% for servicio in servicios %}
             <tr data-category="{{ servicio.categoriaId }}">
@@ -42,14 +53,13 @@
                     </td>
                 {% endif %}
                 <td><strong>${{ servicio.precioBase }}</strong></td>
-                <td>{{ servicio.idServicio }}</td><td><strong>{{ servicio.nombreServicio }}</strong></td>
-                <td>{{ servicio.categoria }}</td><td>{{ servicio.descripcionServicio }}</td>
-                {% if tiene_duracion %}<td>{{ servicio.duracion|time_input }}</td>{% endif %}<td><strong>${{ servicio.precioBase }}</strong></td>
                 <td><span class="{{ 'estado-activo' if servicio.estado == 'Activo' else 'estado-inactivo' }}">{{ servicio.estado }}</span></td>
                 <td>
                     <a href="{{ url_for('servicios_formulario_actualizacion', id=servicio.idServicio) }}" class="boton-editar boton-icono" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a>
                     <form method="post" class="inline-form" data-confirm="¿Confirmas cambiar el estado de este servicio?" action="{{ url_for('servicios_cambiar_estado', id=servicio.idServicio, estado='Inactivo' if servicio.estado == 'Activo' else 'Activo') }}">
-                        <button class="boton-accion {{ 'boton-eliminar' if servicio.estado == 'Activo' else 'boton-activar' }}" type="submit" title="{{ 'Inactivar' if servicio.estado == 'Activo' else 'Activar' }}"><i class="{{ 'fa-solid fa-trash' if servicio.estado == 'Activo' else 'fa-solid fa-check' }}"></i></button>
+                        <button class="boton-accion {{ 'boton-eliminar' if servicio.estado == 'Activo' else 'boton-activar' }}" type="submit" title="{{ 'Inactivar' if servicio.estado == 'Activo' else 'Activar' }}">
+                            <i class="{{ 'fa-solid fa-trash' if servicio.estado == 'Activo' else 'fa-solid fa-check' }}"></i>
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -75,25 +85,6 @@
         </div>
     </aside>
 </div>
-<table>
-    <thead><tr><th>#</th><th>Servicio</th><th>Categoría</th><th>Descripción</th>{% if tiene_duracion %}<th>Duración</th>{% endif %}<th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead>
-    <tbody id="tablaServicios">
-    {% for servicio in servicios %}
-    <tr>
-        <td>{{ servicio.idServicio }}</td><td><strong>{{ servicio.nombreServicio }}</strong></td>
-        <td>{{ servicio.categoria }}</td><td>{{ servicio.descripcionServicio }}</td>
-        {% if tiene_duracion %}<td>{{ servicio.duracion|time_input }}</td>{% endif %}<td><strong>${{ servicio.precioBase }}</strong></td>
-        <td><span class="{{ 'estado-activo' if servicio.estado == 'Activo' else 'estado-inactivo' }}">{{ servicio.estado }}</span></td>
-        <td>
-            <a href="{{ url_for('servicios_formulario_actualizacion', id=servicio.idServicio) }}" class="boton-editar boton-icono" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a>
-            <form method="post" class="inline-form" data-confirm="¿Confirmas cambiar el estado de este servicio?" action="{{ url_for('servicios_cambiar_estado', id=servicio.idServicio, estado='Inactivo' if servicio.estado == 'Activo' else 'Activo') }}">
-                <button class="boton-accion {{ 'boton-eliminar' if servicio.estado == 'Activo' else 'boton-activar' }}" type="submit" title="{{ 'Inactivar' if servicio.estado == 'Activo' else 'Activar' }}"><i class="{{ 'fa-solid fa-trash' if servicio.estado == 'Activo' else 'fa-solid fa-check' }}"></i></button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
 {% else %}
 <div class="sin-resultados"><i class="fas fa-folder-open"></i><p>No se encontraron servicios registrados</p></div>
 {% endif %}

@@ -27,7 +27,17 @@
 <div class="insumos-layout">
     <div class="insumos-tabla-contenedor">
         <table>
-            <thead><tr><th>#</th><th>Nombre</th><th>Descripción</th><th>Vencimiento</th><th>Stock</th><th>Categoría</th><th>Acciones</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Vencimiento</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
             <tbody id="tablaInsumos">
             {% for insumo in insumos %}
             <tr data-category="{{ insumo.categoriaInsumoId }}">
@@ -61,22 +71,6 @@
         </div>
     </aside>
 </div>
-<table>
-    <thead><tr><th>#</th><th>Nombre</th><th>Descripción</th><th>Vencimiento</th><th>Stock</th><th>Categoría</th><th>Acciones</th></tr></thead>
-    <tbody id="tablaInsumos">
-    {% for insumo in insumos %}
-    <tr>
-        <td class="celda-id">{{ insumo.idInsumo }}</td>
-        <td class="celda-nombre">{{ insumo.nombreInsumo }}</td>
-        <td>{{ insumo.descripcionInsumo }}</td>
-        <td>{{ insumo.fechaVencimiento.isoformat() if insumo.fechaVencimiento else 'N/A' }}</td>
-        <td class="info"><p class="principal">{{ insumo.stockActual }}</p><span>Mínimo: {{ insumo.stockMinPosible }}</span></td>
-        <td>{{ categorias.get(insumo.categoriaInsumo|string, 'Sin categoría') }}</td>
-        <td><a href="{{ url_for('insumos_formulario_actualizacion', id=insumo.idInsumo) }}" class="boton-editar boton-icono" title="Editar"><i class="fas fa-edit"></i></a></td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
 {% else %}
 <div class="sin-resultados"><i class="fas fa-box-open"></i><p>No se encontraron insumos registrados</p></div>
 {% endif %}
