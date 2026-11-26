@@ -9,6 +9,7 @@ from flask import (
     Flask,
     abort,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
@@ -76,22 +77,21 @@ _SERVICE_CATALOGS = {
             "spa",
         },
     },
-     "cejas-y-pestanas": {
-            "title": "Cejas y Pestañas",
-            "categories": {"cejas y pestanas"},
-        },
+    "cejas-y-pestanas": {
+        "title": "Cejas y Pestañas",
+        "categories": {"cejas y pestanas"},
+    },
     "depilacion": {
         "title": "Depilación",
         "categories": {"depilacion"},
     },
-     "color": {
-            "title": "Color",
-            "categories": {"color"},
-        },
+    "color": {
+        "title": "Color",
+        "categories": {"color"},
+    },
 }
 
 
-<<<<<<< HEAD
 @app.template_filter("duracion_texto")
 def duracion_texto(duracion):
     if not duracion:
@@ -114,7 +114,8 @@ def duracion_texto(duracion):
     if horas > 0:
         return f"{horas} hora" if horas == 1 else f"{horas} horas"
     return f"{minutos} minutos"
-=======
+
+
 @app.template_filter("time_input")
 def time_input(value):
     if value is None:
@@ -125,7 +126,6 @@ def time_input(value):
         total_minutes = int(value.total_seconds() // 60)
         return f"{(total_minutes // 60) % 24:02d}:{total_minutes % 60:02d}"
     return str(value)[:5]
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 
 
 def _fetch_all(sql, params=()):
@@ -187,7 +187,10 @@ def _optional_form_integer(name):
 
 def _normalize_label(value):
     normalized = unicodedata.normalize("NFKD", str(value or ""))
-    return "".join(character for character in normalized if not unicodedata.combining(character)).casefold().strip()
+    return "".join(
+        character for character in normalized if not unicodedata.combining(character)
+    ).casefold().strip()
+
 
 def _insumo_category_id(value):
     if value is None:
@@ -215,7 +218,10 @@ def _service_category_id(value):
     for category_id, data in _SERVICE_CATALOGS.items():
         if normalized_label == category_id:
             return category_id
-        if any(_normalize_label(category) == normalized_label for category in data["categories"]):
+        if any(
+            _normalize_label(category) == normalized_label
+            for category in data["categories"]
+        ):
             return category_id
     return "otros"
 
@@ -232,7 +238,6 @@ def _inventory_summary():
         "ORDER BY stockActual ASC, nombreInsumo ASC LIMIT 7"
     )
     return summary, alerts
-
 
 
 def _available_services():
@@ -416,6 +421,123 @@ def _appointment_form_data(appointment=None):
     }
 
 
+# =========================================================================
+# FUNCIONES AUXILIARES PARA DISPONIBILIDAD DE CITAS POR ESTILISTA
+# =========================================================================
+
+def _service_duration_delta(service):
+    duration = service.get("duracion")
+    if duration is None:
+        return timedelta(minutes=30)
+    if isinstance(duration, timedelta):
+        return duration if duration.total_seconds() > 0 else timedelta(minutes=30)
+    if isinstance(duration, time):
+        delta = timedelta(
+            hours=duration.hour, minutes=duration.minute, seconds=duration.second
+        )
+        return delta if delta.total_seconds() > 0 else timedelta(minutes=30)
+    parsed = datetime.strptime(str(duration), "%H:%M:%S").time()
+    delta = timedelta(hours=parsed.hour, minutes=parsed.minute, seconds=parsed.second)
+    return delta if delta.total_seconds() > 0 else timedelta(minutes=30)
+
+
+def _active_stylists():
+    return _fetch_all(
+        "SELECT u.idUsuario, "
+        f"{_user_name_expression('u')} AS nombreCompleto, u.cargo "
+        "FROM usuario AS u "
+        "WHERE u.estado = 'Activo' AND u.idRolFK IN (%s, %s) "
+        "ORDER BY nombreCompleto",
+        (_ROLE_EMPLOYEE, _ROLE_ADMIN),
+    )
+
+
+def _booked_slots_for_stylist(stylist_id, target_date):
+    columns = _table_columns("cita")
+    stylist_col = (
+        "idEstilistaFK"
+        if "idEstilistaFK" in columns
+        else ("idEmpleadoFK" if "idEmpleadoFK" in columns else None)
+    )
+    if not stylist_col or "horaInicio" not in columns:
+        return []
+
+    rows = _fetch_all(
+        f"SELECT horaInicio, horaFinal FROM cita "
+        f"WHERE {stylist_col} = %s AND fecha = %s "
+        f"AND estado NOT IN ('Cancelada', 'No asistida')",
+        (stylist_id, target_date),
+    )
+
+    occupied = []
+    for row in rows:
+        raw_start = row.get("horaInicio")
+        if raw_start is None:
+            continue
+        if isinstance(raw_start, timedelta):
+            start_dt = datetime.combine(target_date, time.min) + raw_start
+        elif isinstance(raw_start, time):
+            start_dt = datetime.combine(target_date, raw_start)
+        else:
+            start_dt = datetime.combine(
+                target_date, datetime.strptime(str(raw_start)[:8], "%H:%M:%S").time()
+            )
+
+        raw_end = row.get("horaFinal")
+        if raw_end is not None:
+            if isinstance(raw_end, timedelta):
+                end_dt = datetime.combine(target_date, time.min) + raw_end
+            elif isinstance(raw_end, time):
+                end_dt = datetime.combine(target_date, raw_end)
+            else:
+                end_dt = datetime.combine(
+                    target_date, datetime.strptime(str(raw_end)[:8], "%H:%M:%S").time()
+                )
+        else:
+            end_dt = start_dt + timedelta(minutes=30)
+
+        occupied.append((start_dt, end_dt))
+    return occupied
+
+
+def _available_hours_for_stylist(stylist_id, target_date, duration_delta, step_minutes=30):
+    now = datetime.now()
+    start_window = datetime.combine(target_date, time(8, 0))
+    end_window = datetime.combine(target_date, time(22, 0))
+    occupied = _booked_slots_for_stylist(stylist_id, target_date)
+
+    slots = []
+    current = start_window
+    step = timedelta(minutes=step_minutes)
+
+    while current + duration_delta <= end_window:
+        slot_end = current + duration_delta
+        is_past = target_date == date.today() and current <= now
+        overlaps = any(
+            current < occ_end and slot_end > occ_start
+            for occ_start, occ_end in occupied
+        )
+        slots.append(
+            {
+                "hora": current.strftime("%H:%M"),
+                "hora_fin": slot_end.strftime("%H:%M"),
+                "disponible": not (is_past or overlaps),
+                "motivo": (
+                    "Hora pasada"
+                    if is_past
+                    else ("Ocupado con el estilista" if overlaps else "Disponible")
+                ),
+            }
+        )
+        current += step
+
+    return slots
+
+
+# =========================================================================
+# MANEJO DE ERRORES Y RUTAS GENERALES
+# =========================================================================
+
 @app.errorhandler(mysql.connector.Error)
 def handle_database_error(error):
     app.logger.exception("Error al consultar la base de datos", exc_info=error)
@@ -444,9 +566,7 @@ def handle_database_error(error):
         )
         status = 500
     return (
-        render_template(
-            "error.html", mensaje=message
-        ),
+        render_template("error.html", mensaje=message),
         status,
     )
 
@@ -570,9 +690,11 @@ def dashboard():
 def portal_cliente():
     user_id = _require_client()
     if user_id is None:
-        return redirect(url_for("dashboard") if session.get("usuario_id") else url_for("login"))
+        return redirect(
+            url_for("dashboard") if session.get("usuario_id") else url_for("login")
+        )
     citas = _fetch_all(
-        "SELECT idCita, servicio, fecha, estado, observacion, totalServicio "
+        "SELECT idCita, servicio, fecha, horaInicio, horaFinal, estado, observacion, totalServicio "
         "FROM cita WHERE idUsuarioFK = %s ORDER BY fecha DESC, idCita DESC",
         (user_id,),
     )
@@ -632,66 +754,154 @@ def seleccionar_servicio():
     return redirect(url_for("citas_calendario"))
 
 
+# =========================================================================
+# VISTA 1: CALENDARIO MENSUAL (SELECCIÓN DE DÍA >= HOY)
+# =========================================================================
+
 @app.route("/citas/calendario", methods=["GET", "POST"])
 def citas_calendario():
     if _require_client() is None:
-        return redirect(url_for("dashboard") if session.get("usuario_id") else url_for("login"))
+        return redirect(
+            url_for("dashboard") if session.get("usuario_id") else url_for("login")
+        )
     service = _booking_service()
     if service is None:
         session.pop("booking", None)
         flash("Selecciona un servicio disponible para continuar.", "error")
         return redirect(url_for("home", _anchor="servicios"))
+
     if request.method == "POST":
         try:
             appointment_date = date.fromisoformat(_form_value("fecha"))
-            appointment_time = datetime.strptime(
-                _form_value("hora"), "%H:%M"
-            ).time()
         except ValueError:
-            abort(400, description="La fecha o la hora seleccionada no es válida.")
+            abort(400, description="La fecha seleccionada no es válida.")
         if appointment_date < date.today():
-            abort(400, description="La fecha de la cita no puede estar en el pasado.")
-        if (
-            appointment_time < time(8)
-            or appointment_time > time(20)
-            or (appointment_time.hour * 60 + appointment_time.minute) % 30
-        ):
-            abort(400, description="Selecciona una hora entre las 08:00 y las 20:00, en intervalos de 30 minutos.")
-        if appointment_date == date.today() and appointment_time <= datetime.now().time():
-            abort(400, description="Selecciona una hora futura.")
+            flash("No puedes seleccionar una fecha anterior a hoy.", "error")
+            return redirect(url_for("citas_calendario"))
+
         booking = dict(session["booking"])
-        booking.update(
-            fecha=appointment_date.isoformat(),
-            hora=appointment_time.strftime("%H:%M"),
-        )
+        booking["fecha"] = appointment_date.isoformat()
+        booking.pop("hora", None)
+        booking.pop("estilista_id", None)
         session["booking"] = booking
-        return redirect(url_for("citas_estilistas"))
+        return redirect(url_for("citas_horarios"))
+
+    today = date.today()
     return render_template(
         "citas/calendario.html",
         servicio=service,
-        fecha_minima=date.today().isoformat(),
+        fecha_minima=today.isoformat(),
+        anio_actual=today.year,
+        mes_actual=today.month,
+        dia_actual=today.day,
         catalog_slug=session["booking"].get("catalog_slug", "damas"),
-        tiene_horario="horaInicio" in _table_columns("cita"),
     )
 
 
-@app.route("/citas/estilistas", methods=["GET", "POST"])
-def citas_estilistas():
+# =========================================================================
+# VISTA 2: ESTILISTA Y HORAS DISPONIBLES (08:00 A 22:00)
+# =========================================================================
+
+@app.route("/citas/horarios/disponibilidad")
+def citas_horarios_disponibilidad():
     if _require_client() is None:
-        return redirect(url_for("dashboard") if session.get("usuario_id") else url_for("login"))
-    booking = session.get("booking")
+        return jsonify({"error": "No autorizado"}), 401
     service = _booking_service()
-    if (
-        service is None
-        or not isinstance(booking, dict)
-        or not booking.get("fecha")
-        or not booking.get("hora")
-    ):
-        flash("Completa primero la selección de servicio, fecha y hora.", "error")
+    booking = session.get("booking") or {}
+    if service is None or not booking.get("fecha"):
+        return jsonify({"error": "Selecciona primero una fecha"}), 400
+
+    try:
+        target_date = date.fromisoformat(request.args.get("fecha", booking["fecha"]))
+        stylist_id = int(request.args.get("estilista_id", ""))
+    except ValueError:
+        return jsonify({"error": "Parámetros inválidos"}), 400
+
+    if target_date < date.today():
+        return jsonify({"slots": [], "mensaje": "Fecha anterior a hoy."})
+
+    duration_delta = _service_duration_delta(service)
+    slots = _available_hours_for_stylist(stylist_id, target_date, duration_delta)
+    return jsonify(
+        {
+            "fecha": target_date.isoformat(),
+            "estilista_id": stylist_id,
+            "duracion_minutos": int(duration_delta.total_seconds() // 60),
+            "slots": [s for s in slots if s["disponible"]],
+            "todos_los_slots": slots,
+        }
+    )
+
+
+@app.route("/citas/horarios", methods=["GET", "POST"])
+def citas_horarios():
+    if _require_client() is None:
+        return redirect(
+            url_for("dashboard") if session.get("usuario_id") else url_for("login")
+        )
+    service = _booking_service()
+    booking = session.get("booking")
+    if service is None or not isinstance(booking, dict) or not booking.get("fecha"):
+        flash("Primero selecciona una fecha en el calendario.", "error")
         return redirect(url_for("citas_calendario"))
+
+    appointment_date = date.fromisoformat(booking["fecha"])
+    if appointment_date < date.today():
+        flash("La fecha guardada ya pasó; elige una nueva fecha.", "error")
+        return redirect(url_for("citas_calendario"))
+
+    stylists = _active_stylists()
+    if not stylists:
+        flash("No hay estilistas activos disponibles en este momento.", "error")
+        return redirect(url_for("citas_calendario"))
+
+    duration_delta = _service_duration_delta(service)
+    selected_stylist_id = (
+        request.form.get("estilista_id")
+        or request.args.get("estilista_id")
+        or str(stylists[0]["idUsuario"])
+    )
+    try:
+        stylist_id = int(selected_stylist_id)
+    except ValueError:
+        stylist_id = stylists[0]["idUsuario"]
+
+    stylist_obj = next(
+        (s for s in stylists if s["idUsuario"] == stylist_id), stylists[0]
+    )
+    stylist_id = stylist_obj["idUsuario"]
+
     if request.method == "POST":
-        appointment_date = date.fromisoformat(booking["fecha"])
-        appointment_time = datetime.strptime(booking["hora"], "%H:%M").time()
+        hora_str = _form_value("hora")
+        try:
+            appointment_time = datetime.strptime(hora_str, "%H:%M").time()
+        except ValueError:
+            abort(400, description="Hora inválida.")
+
+        start_dt = datetime.combine(appointment_date, appointment_time)
+        end_dt = start_dt + duration_delta
+
+        if appointment_time < time(8, 0) or end_dt.time() > time(22, 0):
+            abort(
+                400,
+                description="Solo se permiten citas entre las 08:00 y las 22:00.",
+            )
+
+        if appointment_date == date.today() and start_dt <= datetime.now():
+            abort(
+                400, description="No puedes seleccionar una hora anterior a la actual."
+            )
+
+        occupied = _booked_slots_for_stylist(stylist_id, appointment_date)
+        if any(
+            start_dt < occ_end and end_dt > occ_start for occ_start, occ_end in occupied
+        ):
+            flash(
+                "Esa hora ya fue reservada para el estilista seleccionado. Elige otra.",
+                "error",
+            )
+            return redirect(url_for("citas_horarios", estilista_id=stylist_id))
+
         columns = _table_columns("cita")
         values = {
             "servicio": service["nombreServicio"],
@@ -702,51 +912,49 @@ def citas_estilistas():
             "idServicioFK": service["idServicio"],
             "idInsumoFK": service["idInsumoFK"],
         }
+        if "idEstilistaFK" in columns:
+            values["idEstilistaFK"] = stylist_id
+        elif "idEmpleadoFK" in columns:
+            values["idEmpleadoFK"] = stylist_id
+
         if "horaInicio" in columns:
             values["horaInicio"] = appointment_time
         if "horaFinal" in columns:
-            duration = service["duracion"]
-            if duration is None:
-                abort(
-                    503,
-                    description=(
-                        "No se puede calcular la hora de finalización porque el "
-                        "servicio no tiene duración configurada."
-                    ),
-                )
-            if isinstance(duration, timedelta):
-                duration_delta = duration
-            elif isinstance(duration, time):
-                duration_delta = timedelta(
-                    hours=duration.hour, minutes=duration.minute, seconds=duration.second
-                )
-            else:
-                parsed_duration = datetime.strptime(str(duration), "%H:%M:%S").time()
-                duration_delta = timedelta(
-                    hours=parsed_duration.hour,
-                    minutes=parsed_duration.minute,
-                    seconds=parsed_duration.second,
-                )
-            finish = datetime.combine(appointment_date, appointment_time) + duration_delta
-            values["horaFinal"] = finish.time()
+            values["horaFinal"] = end_dt.time()
         if "observacion" in columns:
             values["observacion"] = (
-                "Reserva web"
-                if "horaInicio" in columns
-                else f"Hora solicitada: {booking['hora']}"
+                f"Estilista: {stylist_obj['nombreCompleto']} | Hora: {hora_str}"
             )
+
         insert_columns = tuple(values)
         placeholders = ", ".join(["%s"] * len(insert_columns))
         _execute(
-            f"INSERT INTO cita ({', '.join(insert_columns)}) "
-            f"VALUES ({placeholders})",
-            tuple(values[column] for column in insert_columns),
+            f"INSERT INTO cita ({', '.join(insert_columns)}) VALUES ({placeholders})",
+            tuple(values[col] for col in insert_columns),
         )
         session.pop("booking", None)
-        flash("Tu solicitud de cita quedó registrada.", "success")
+        flash(
+            f"Cita agendada para el {appointment_date.isoformat()} a las {hora_str} "
+            f"con {stylist_obj['nombreCompleto']}.",
+            "success",
+        )
         return redirect(url_for("portal_cliente"))
-    return render_template("citas/estilistas.html", servicio=service, reserva=booking)
 
+    slots = _available_hours_for_stylist(stylist_id, appointment_date, duration_delta)
+    return render_template(
+        "citas/horarios.html",
+        servicio=service,
+        fecha=appointment_date.isoformat(),
+        estilistas=stylists,
+        estilista_seleccionado=stylist_obj,
+        slots=slots,
+        duracion_texto_str=duracion_texto(duration_delta),
+    )
+
+
+# =========================================================================
+# RUTAS DE PERFIL, USUARIOS, CITAS ADMIN, INSUMOS Y SERVICIOS
+# =========================================================================
 
 @app.route("/usuarios/perfil")
 def perfil_usuario():
@@ -906,9 +1114,12 @@ def listar_citas():
         "citas/tablaCitas.html",
         citas=_fetch_all(
             "SELECT c.*, s.nombreServicio, "
-            f"{_user_name_expression('u')} AS cliente "
-            "FROM cita AS c LEFT JOIN servicio AS s ON s.idServicio = c.idServicioFK "
+            f"{_user_name_expression('u')} AS cliente, "
+            f"{_user_name_expression('e')} AS estilista "
+            "FROM cita AS c "
+            "LEFT JOIN servicio AS s ON s.idServicio = c.idServicioFK "
             "LEFT JOIN usuario AS u ON u.idUsuario = c.idUsuarioFK "
+            "LEFT JOIN usuario AS e ON e.idUsuario = c.idEstilistaFK "
             "ORDER BY c.fecha DESC, c.idCita DESC"
         ),
         tiene_horario="horaInicio" in _table_columns("cita"),
@@ -990,15 +1201,13 @@ def listar_insumos():
     insumos = _fetch_all("SELECT * FROM insumo ORDER BY idInsumo ASC")
     for insumo in insumos:
         category_value = insumo.get("categoriaInsumo")
-
         category_id = _insumo_category_id(category_value)
         insumo["categoriaInsumoId"] = category_id
-        
+
         if category_value is not None and str(category_value).strip():
             insumo["categoriaInsumoNombre"] = str(category_value).strip()
         else:
             insumo["categoriaInsumoNombre"] = "Sin categoría"
-
     return render_template(
         "insumos/tablaInsumos.html",
         insumos=insumos,
@@ -1048,14 +1257,13 @@ def insumos_formulario_actualizacion(id):
     insumo = _fetch_one("SELECT * FROM insumo WHERE idInsumo = %s", (id,))
     if insumo is None:
         abort(404)
-        
+
     category_value = insumo.get("categoriaInsumo")
     insumo["categoriaId"] = _insumo_category_id(category_value)
-
     return render_template(
-        "insumos/formularioActualizacionInsumos.html", 
+        "insumos/formularioActualizacionInsumos.html",
         insumo=insumo,
-        categorias=_INSUMO_CATEGORIES  # <-- ¡Agrega esta línea aquí!
+        categorias=_INSUMO_CATEGORIES,
     )
 
 
@@ -1064,7 +1272,6 @@ def listar_servicios():
     servicios = _fetch_all("SELECT * FROM servicio ORDER BY idServicio DESC")
     for servicio in servicios:
         servicio["categoriaId"] = _service_category_id(servicio.get("categoria"))
-
     return render_template(
         "servicios/tablaServicios.html",
         servicios=servicios,
@@ -1159,9 +1366,12 @@ def handle_bad_request(error):
 
 @app.errorhandler(404)
 def handle_not_found(error):
-    return render_template(
-        "error.html", mensaje=f"No se encontró el recurso solicitado ({error.code})."
-    ), 404
+    return (
+        render_template(
+            "error.html", mensaje=f"No se encontró el recurso solicitado ({error.code})."
+        ),
+        404,
+    )
 
 
 @app.errorhandler(503)

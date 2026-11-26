@@ -18,10 +18,6 @@
         <label for="stockActual">Stock actual</label><input type="number" id="stockActual" name="stockActual" min="0" value="{{ insumo.stockActual }}" required>
         <label for="stockMinPosible">Stock mínimo</label><input type="number" id="stockMinPosible" name="stockMinPosible" min="0" value="{{ insumo.stockMinPosible }}" required>
         <label for="horaActualizacion">Hora del ingreso</label><input type="time" id="horaActualizacion" name="horaActualizacion" value="{{ insumo.horaActualizacion|time_input }}" required>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
         <label for="categoria">Categoría</label>
         <select id="categoria" name="categoria" required>
          {% if insumo.categoriaId not in categorias %}
@@ -30,19 +26,11 @@
          {% for value, info in categorias.items() %}
          <option value="{{ value }}" {{ 'selected' if insumo.categoriaId == value else '' }}>{{ info.title }}</option>
          {% endfor %}
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
         <label for="categoriaInsumo">Categoría</label>
         <select id="categoriaInsumo" name="categoriaInsumo" required>
             {% for value, label in [('1', 'Tintes y Coloración'), ('2', 'Químicos y Alisados'), ('3', 'Cuidado Capilar'), ('4', 'Uñas y Manicura'), ('5', 'Depilación y Estética'), ('6', 'Material Desechable'), ('7', 'Herramientas y Barbería')] %}
             <option value="{{ value }}" {{ 'selected' if insumo.categoriaInsumo|string == value else '' }}>{{ label }}</option>
             {% endfor %}
-<<<<<<< HEAD
-=======
->>>>>>> fae84e3bca1e76f5e81b89a6cc4c9501a7c2a9d6
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
         </select>
         <a class="btn-cancelar" href="{{ url_for('listar_insumos') }}">Cancelar</a>
         <button type="submit" class="btn-login">Actualizar</button>
