@@ -9,15 +9,13 @@ body {
     font-family: Poppins, Arial, sans-serif;
 }
 
-/*BARRA SUPERIOR*/
-
 a {
     color: inherit;
 }
 
 .site-header {
     align-items: center;
-    background: #111;
+    background: #111111;
     color: #fff;
     display: flex;
     gap: 24px;
@@ -60,8 +58,6 @@ a {
     text-decoration: underline;
 }
 
-/*CONTENIDO DE CLIENTE*/
-
 .page {
     margin: 0 auto;
     max-width: 1180px;
@@ -70,6 +66,27 @@ a {
 
 .page.narrow {
     max-width: 760px;
+}
+
+.back-link {
+    font-size: 20px;
+    color: #6a5a26;
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    border-bottom-left-radius: 5px;
+    border-left: 1px solid #6a5a26;
+    border-bottom: 1px solid #6a5a26;
+    padding: 5px 10px;
+    transition: ease 0.5s;
+}
+
+.back-link:hover {
+    transform: translateX(10px);
+    box-shadow: -3px 3px 4px #6a5a26;
+    border-radius: 5px;
+    border-right: 1px solid #6a5a26;
+    border-top: 1px solid #6a5a26;
 }
 
 .welcome {
@@ -95,11 +112,11 @@ a {
 
 h2 {
     color: #d4af37;
+    font-size: 2rem;
 }
 
 hr {
-    color: #000000;
-    margin: 2.5vh 0;
+    margin: 2.5vh 0 ;
 }
 
 .category-grid {
@@ -109,24 +126,24 @@ hr {
 }
 
 .category-card {
-    background-color: #eeedec;
     text-decoration: none;
-    border: 1px solid #d4af37;
-    border-radius: 15px;
-    padding: 5px 10px;
+    padding: 1vh 2vh;
     text-align: center;
-    box-shadow: 0 0 10px #000000;
+    border: 1px solid #8c7222;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #111111;
+    background-color: #e2e2e2;
     transition: ease 0.3s;
 }
 
 .category-card span {
     color: #8c7222;
-    font-size: .85rem;
+    font-size: 1.1rem;
 }
 
 .category-card h3 {
     font-family: "Playfair Display", Georgia, serif;
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     margin: 10px 0;
 }
 
@@ -135,9 +152,37 @@ hr {
 }
 
 .category-card:hover {
-    box-shadow: 0 0 10px #d4af37;
-    transform: scale(1.1);
     background-color: #ffffff;
+    box-shadow: 0 0 15px #d4af37;
+    transform: scale(1.1);
+}
+
+.booking-card {
+    display: grid;
+    gap: 12px;
+}
+
+.booking-card label {
+    font-weight: 600;
+}
+
+.booking-card input {
+    border: 1px solid #cfc8b7;
+    border-radius: 6px;
+    font: inherit;
+    margin-bottom: 10px;
+    padding: 12px;
+    width: 100%;
+}
+
+.booking-card .help-text {
+    color: #68645a;
+    font-size: .9rem;
+}
+
+.summary h2 {
+    font-family: "Playfair Display", Georgia, serif;
+    margin: 0;
 }
 
 .empty-state,
@@ -160,25 +205,24 @@ hr {
 }
 
 .table-wrap {
-    min-height: 20vh;
     overflow-x: auto;
+    padding: 2.5vh;
 }
 
 table{
-    margin: 3vh;
-    width:95%;
+    width:100%;
     border-collapse:collapse;
     background:white;
-    border-radius:20px;
+    border-radius:10px;
     overflow:hidden;
     box-shadow:0 10px 25px rgba(0, 0, 0, 0.51);
 }
 
 th{
     background: #d4af37;
-    color:black;
-    padding:12px;
-    font-size:16px;
+    color: black;
+    padding: 12px;
+    font-size: 16px;
 }
 
 td{
