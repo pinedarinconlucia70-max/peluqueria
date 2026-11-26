@@ -8,9 +8,9 @@
     <title>Registrar insumo</title>
 </head>
 <body>
-<div class="card">
-    <form class="form-grid" action="{{ url_for('insumos_guardar') }}" method="post">
-        <h2 style="grid-column: span 2;">REGISTRA UN INSUMO</h2>
+<div class="card insumo-card">
+    <form class="form-grid insumo-form" action="{{ url_for('insumos_guardar') }}" method="post">
+        <h2>REGISTRA UN INSUMO</h2>
         <label for="nombreInsumo">Nombre del insumo</label><input id="nombreInsumo" name="nombreInsumo" required>
         <label for="descripcionInsumo">Descripción</label><input id="descripcionInsumo" name="descripcionInsumo" required>
         <label for="fechaVencimiento">Fecha de vencimiento</label><input type="date" id="fechaVencimiento" name="fechaVencimiento" required>

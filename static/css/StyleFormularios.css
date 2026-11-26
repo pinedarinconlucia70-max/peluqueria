@@ -98,11 +98,8 @@ button, .btn-cancelar{
 flex:1;
 padding:16px;
 margin: 15px 5px 0 5px;
-<<<<<<< HEAD
 width: 200px;
-=======
 width: 235px;
->>>>>>> 765262c318cb0e81f223b2d4e08edfca0cd8b6c7
 border:none;
 cursor:pointer;
 font-size:15px;
@@ -131,10 +128,50 @@ color:black;
 transform:scale(1.03);
 }
 
+.card.insumo-card {
+    box-sizing: border-box;
+    max-width: 95%;
+    width: 680px;
+}
+
+.insumo-form {
+    display: grid;
+    gap: 10px 16px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+}
+
+.insumo-form h2 {
+    grid-column: 1 / -1;
+}
+
+.insumo-form input,
+.insumo-form select {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.insumo-form .btn-cancelar,
+.insumo-form .btn-login {
+    box-sizing: border-box;
+    margin: 15px 0 0;
+    min-width: 0;
+    padding: 12px;
+    text-align: center;
+    width: 100%;
+}
+
 /* RESPONSIVE */
 
 @media(max-width:700px){
 .form-grid{
 grid-template-columns:1fr;
+}
+
+.card.insumo-card {
+    padding: 28px;
+}
+
+.insumo-form h2 {
+    grid-column: 1;
 }
 }

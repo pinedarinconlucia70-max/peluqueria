@@ -48,10 +48,10 @@
         <div class="caja-filtros">
             <h3>Filtrar por categoría</h3>
             <div class="grupo-filtro">
-                 <button class="btn-filtro active" type="button" data-table-filter="todos" data-table-filter-target="tablaInsumos" aria-pressed="true">Todos</button>
-                 {% for id, info in categorias.items() %}
+                    <button class="btn-filtro active" type="button" data-table-filter="todos" data-table-filter-target="tablaInsumos" aria-pressed="true">Todos</button>
+                    {% for id, info in categorias.items() %}
                     <button class="btn-filtro" type="button" data-table-filter="{{ id }}" data-table-filter-target="tablaInsumos" aria-pressed="false">{{ info.title }}</button>
-                 {% endfor %}
+                    {% endfor %}
             </div>
         </div>
         <div class="paginacion">

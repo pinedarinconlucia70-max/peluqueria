@@ -721,7 +721,10 @@ def catalogo_servicios(slug):
     services = [
         service
         for service in _available_services()
-        if _normalize_label(service["categoria"]) in catalog["categories"]
+        if any(
+            _normalize_label(service["categoria"]) == _normalize_label(category)
+            for category in catalog["categories"]
+        )
     ]
     return render_template(
         "servicios/catalogo.html",
